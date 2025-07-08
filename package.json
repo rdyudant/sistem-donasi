@@ -1,0 +1,28 @@
+{
+  "name": "sistem-donasi",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/rdyudant/sistem-donasi.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/rdyudant/sistem-donasi/issues"
+  },
+  "homepage": "https://github.com/rdyudant/sistem-donasi#readme",
+  "description": "",
+  "devDependencies": {
+    "vite": "^7.0.2"
+  },
+  "dependencies": {
+    "bootstrap": "^5.3.7"
+  }
+}
