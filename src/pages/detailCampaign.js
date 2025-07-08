@@ -1,4 +1,3 @@
-// src/pages/detailCampaign.js
 export default function detailCampaignPage(app) {
   const campaignId = window.location.pathname.split('/').pop();
 
@@ -66,10 +65,10 @@ export default function detailCampaignPage(app) {
                 <p>${campaign.deskripsi}</p>
               </div>
 
-              <div class="d-flex gap-2">
+              <!-- <div class="d-flex gap-2">
                 <a href="#" class="btn btn-outline-primary w-50"><i class="bi bi-share"></i> Bagikan</a>
                 <a href="/donasi/${campaign.id}/form" class="btn btn-danger w-50">Donasi Sekarang</a>
-              </div>
+              </div> -->
 
             </div>
           </div>

@@ -1,4 +1,3 @@
-// src/pages/login.js
 export default function loginPage(app) {
   app.innerHTML = `
     <main>

@@ -151,12 +151,12 @@ export default async function campaignPage(app) {
                   
                   <div class="card-footer bg-white border-0 p-4 pt-0">
                     <div class="d-grid gap-2">
-                      <a href="/campaign/${campaign.id}" onclick="navigate(event, 'campaign/${campaign.id}')" class="btn btn-primary btn-lg fw-bold">
-                        <i class="fas fa-heart me-2"></i>Donasi Sekarang
+                      <a href="/campaign/${campaign.id}" onclick="navigate(event, 'campaign/${campaign.id}')" class="btn btn-primary btn-sm">
+                        Lihat Detail
                       </a>
-                      <button class="btn btn-outline-secondary btn-sm" onclick="shareCampaign(${campaign.id})">
+                      <!-- <button class="btn btn-outline-secondary btn-sm" onclick="shareCampaign(${campaign.id})">
                         <i class="fas fa-share-alt me-1"></i>Bagikan
-                      </button>
+                      </button> -->
                     </div>
                   </div>
                 </div>
@@ -171,9 +171,9 @@ export default async function campaignPage(app) {
             <div class="bg-primary rounded-4 p-5 text-white">
               <h3 class="fw-bold mb-3">Ingin Membuat Kampanye Sendiri?</h3>
               <p class="mb-4">Bergabunglah dengan ribuan orang yang telah membantu sesama melalui platform kami.</p>
-              <button class="btn btn-light btn-lg fw-bold px-5">
+              <a href="/signup" class="btn btn-light btn-lg fw-bold px-5">
                 <i class="fas fa-plus me-2"></i>Buat Kampanye
-              </button>
+              </a>
             </div>
           </div>
         </div>

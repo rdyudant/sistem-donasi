@@ -2,12 +2,14 @@ import campaignPage from './pages/campaign.js';
 import signupPage from './pages/signup.js';
 import loginPage from './pages/login.js';
 import detailCampaignPage from './pages/detailCampaign.js';
+import dashboardPage from './pages/dashboard.js';
 
 const routes = {
   '/': campaignPage,
-  '/daftar': signupPage,
-  '/masuk': loginPage,
-  '/campaign/:id': detailCampaignPage
+  '/signup': signupPage,
+  '/login': loginPage,
+  '/campaign/:id': detailCampaignPage,
+  '/dashboard': dashboardPage
 };
 
 function parseRoute(path) {
@@ -19,12 +21,13 @@ function parseRoute(path) {
 
 export default function router() {
   const path = window.location.pathname;
+  const matchedPath = parseRoute(path);
   const app = document.getElementById('app');
 
-  const page = routes[path];
+  const page = routes[matchedPath];
   if (page) {
     page(app);
   } else {
-    app.innerHTML = '<h1>404 - Halaman tidak ditemukan</h1>';
+    app.innerHTML = '<h1 class="text-center mt-5">404 - Halaman tidak ditemukan</h1>';
   }
 }
