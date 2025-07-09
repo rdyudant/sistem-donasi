@@ -1,5 +1,6 @@
 import renderHeader from '../components/header.js';
 import renderFooter from '../components/footer.js';
+import { url } from './conf/baseurl.js';
 
 export default function signupPage(app) {
   setPageTitle('Daftar Akun');
@@ -36,7 +37,6 @@ export default function signupPage(app) {
                   <label for="alamat" class="form-label">Alamat</label>
                   <textarea class="form-control" id="alamat" name="alamat" rows="3" required></textarea>
                 </div>
-
                 <div class="mb-3">
                   <label for="nohp" class="form-label">Nomor HP</label>
                   <input type="tel" class="form-control" id="nohp" name="nohp" required>
@@ -64,20 +64,21 @@ export default function signupPage(app) {
       username: form.username.value,
       password: form.password.value,
       email: form.email.value,
-      nama: form.nama.value,
+      fullname: form.nama.value,
       alamat: form.alamat.value,
-      nohp: form.nohp.value
+      nomor_hp: form.nohp.value
     };
 
     try {
-      const res = await fetch('http://localhost:3000/api/daftar', {
+      const res = await fetch(url+ '/auth/register', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(data)
       });
 
       const result = await res.json();
-      if (res.ok) {
+      
+      if (result.status === 200) {
         alert('Pendaftaran berhasil!');
         history.pushState(null, '', '/login');
         window.dispatchEvent(new Event('popstate'));

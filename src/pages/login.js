@@ -1,5 +1,6 @@
 import renderHeader from '../components/header.js';
 import renderFooter from '../components/footer.js';
+import { url } from './conf/baseurl.js';
 
 export default function loginPage(app) {
   setPageTitle('Masuk Akun');
@@ -46,15 +47,17 @@ export default function loginPage(app) {
     };
 
     try {
-      const res = await fetch('http://localhost:3000/api/masuk', {
+      const res = await fetch(url+'/auth/login', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(credentials)
       });
 
       const result = await res.json();
-      if (res.ok) {
+      
+      if (result.status === 200) {
         alert('Login berhasil!');
+        localStorage.setItem("token", result.data);
         history.pushState(null, '', '/dashboard');
         window.dispatchEvent(new Event('popstate'));
       } else {
