@@ -1,0 +1,23 @@
+# Folder node_modules tidak perlu masuk ke Git
+node_modules/
+
+# File konfigurasi environment rahasia
+.env
+
+# Cache & log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Folder dist / build hasil kompilasi
+dist/
+build/
+
+# Folder coverage dari testing
+coverage/
+
+# File dari OS atau editor
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
