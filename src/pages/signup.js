@@ -1,5 +1,10 @@
+import renderHeader from '../components/header.js';
+import renderFooter from '../components/footer.js';
+
 export default function signupPage(app) {
+  setPageTitle('Daftar Akun');
   app.innerHTML = `
+    ${renderHeader(false)} <!-- tidak pakai button -->
     <main>
       <section class="py-5 mt-4">
         <div class="container">
@@ -47,6 +52,7 @@ export default function signupPage(app) {
         </div>
       </section>
     </main>
+    ${renderFooter()}
   `;
 
   // Event listener submit

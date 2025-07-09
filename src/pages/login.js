@@ -1,5 +1,10 @@
+import renderHeader from '../components/header.js';
+import renderFooter from '../components/footer.js';
+
 export default function loginPage(app) {
+  setPageTitle('Masuk Akun');
   app.innerHTML = `
+    ${renderHeader(false)} <!-- tidak pakai button -->
     <main>
       <section class="py-5 mt-4">
         <div class="container">
@@ -27,6 +32,7 @@ export default function loginPage(app) {
         </div>
       </section>
     </main>
+    ${renderFooter()}
   `;
 
   // Event listener submit

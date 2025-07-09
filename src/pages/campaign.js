@@ -1,4 +1,8 @@
+import renderHeader from '../components/header.js';
+import renderFooter from '../components/footer.js';
+
 export default async function campaignPage(app) {
+  setPageTitle('Campaign');
   const campaigns = [
     {
       id: 1,
@@ -66,6 +70,7 @@ export default async function campaignPage(app) {
   };
 
   app.innerHTML = `
+    ${renderHeader(true)} <!-- pakai search bar -->
     <!-- Hero Section with Gradient Background -->
     <div class="py-5 mt-5 position-relative overflow-hidden">
       <div class="container text-center text-dark position-relative">
@@ -227,6 +232,7 @@ export default async function campaignPage(app) {
         </div>
       </div>
     </section>
+    ${renderFooter()}
 
     <style>
       .campaign-card {

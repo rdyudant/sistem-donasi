@@ -1,5 +1,8 @@
-// src/pages/dashboard.js
+import renderHeader from '../components/header.js';
+import renderFooter from '../components/footer.js';
+
 export default function dashboardPage(app) {
+  setPageTitle('Dashboard Admin');
   const campaigns = [
     {
       id: 1,
@@ -15,13 +18,15 @@ export default function dashboardPage(app) {
     }
   ];
 
-  toggleSearchBar(false); // Sembunyikan search bar di dashboard
   app.innerHTML = `
+    ${renderHeader(false)} <!-- tidak pakai button -->
     <main class="py-5 mt-5">
       <div class="container">
-        <h2 class="mb-4 text-center">Dashboard Admin - Data Campaign</h2>
+        <h2 class="mb-4 text-center">Kelola Data Campaign</h2>
         <div class="text-end mb-3">
-          <button class="btn btn-success" id="btnTambah">+ Tambah Campaign</button>
+          <a href="/tambah-campaign" class="btn btn-success" id="btnTambah">
+            <i class="bi bi-plus-circle"></i> Tambah Campaign
+          </a>
         </div>
         <div class="table-responsive">
           <table class="table table-bordered table-hover align-middle">
@@ -52,12 +57,8 @@ export default function dashboardPage(app) {
         </div>
       </div>
     </main>
+    ${renderFooter()}
   `;
-
-  // Sementara: handler tombol Tambah
-  document.getElementById('btnTambah').addEventListener('click', () => {
-    alert('Form tambah campaign belum dibuat!');
-  });
 }
 
 // Dummy action (nanti ganti pakai modal/form dinamis)

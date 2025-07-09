@@ -3,13 +3,15 @@ import signupPage from './pages/signup.js';
 import loginPage from './pages/login.js';
 import detailCampaignPage from './pages/detailCampaign.js';
 import dashboardPage from './pages/dashboard.js';
+import tambahCampaignPage from './pages/tambahCampaign.js';
 
 const routes = {
   '/': campaignPage,
   '/signup': signupPage,
   '/login': loginPage,
   '/campaign/:id': detailCampaignPage,
-  '/dashboard': dashboardPage
+  '/dashboard': dashboardPage,
+  '/tambah-campaign': tambahCampaignPage
 };
 
 function parseRoute(path) {

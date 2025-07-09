@@ -1,3 +1,6 @@
+import renderHeader from '../components/header.js';
+import renderFooter from '../components/footer.js';
+
 export default function detailCampaignPage(app) {
   const campaignId = window.location.pathname.split('/').pop();
 
@@ -8,21 +11,34 @@ export default function detailCampaignPage(app) {
     available: "10.000.000",
     collected: "12.000.000",
     target: "50.000.000",
+    image: "https://picsum.photos/seed/sekolah/600/400",
     percentage: 24,
     totalDonatur: 85,
     tanggal: "08 Juli 2025",
     deskripsi: "Kami mengajak Anda untuk berpartisipasi dalam program renovasi sekolah di daerah pelosok. Bantuan Anda sangat berarti."
   };
 
+  setPageTitle(`${campaign.title}`);
   app.innerHTML = `
+    ${renderHeader(true)} <!-- pakai button -->
     <main>
-      <section class="py-5 mt-5">
+
+      <!-- Hero Section dengan Background Gambar -->
+      <section class="position-relative" style="height: 320px; background-image: url('${campaign.image}'); background-size: cover; background-position: center;">
+        <div class="position-absolute top-0 start-0 w-100 h-100 bg-dark bg-opacity-50"></div>
+        <div class="container h-100 d-flex flex-column justify-content-center text-white position-relative">
+          <h1 class="fw-bold">${campaign.title}</h1>
+          <p class="lead">Bantu wujudkan harapan mereka melalui kontribusi Anda.</p>
+        </div>
+      </section>
+
+      <!-- Konten Detail -->
+      <section class="py-5">
         <div class="container">
           <div class="row justify-content-center">
             <div class="col-md-8">
 
-              <h4 class="fw-semibold mb-3">${campaign.title}</h4>
-
+              <!-- Info Donasi -->
               <div class="bg-white p-4 rounded shadow-sm mb-4">
                 <div class="row">
                   <div class="col-md-6">
@@ -38,9 +54,9 @@ export default function detailCampaignPage(app) {
 
                 <div class="progress my-3" style="height: 8px;">
                   <div class="progress-bar bg-primary" role="progressbar" 
-                       style="width: ${campaign.percentage}%"
-                       aria-valuenow="${campaign.percentage}"
-                       aria-valuemin="0" aria-valuemax="100"></div>
+                      style="width: ${campaign.percentage}%"
+                      aria-valuenow="${campaign.percentage}"
+                      aria-valuemin="0" aria-valuemax="100"></div>
                 </div>
 
                 <div class="d-flex justify-content-between align-items-center mb-3">
@@ -59,12 +75,14 @@ export default function detailCampaignPage(app) {
                 </div>
               </div>
 
+              <!-- Cerita -->
               <div class="bg-white p-4 rounded shadow-sm mb-4">
                 <p class="text-muted mb-1">${campaign.tanggal}</p>
                 <h5 class="fw-semibold mb-3">Cerita Penggalangan Dana</h5>
                 <p>${campaign.deskripsi}</p>
               </div>
 
+              <!-- Tombol CTA -->
               <!-- <div class="d-flex gap-2">
                 <a href="#" class="btn btn-outline-primary w-50"><i class="bi bi-share"></i> Bagikan</a>
                 <a href="/donasi/${campaign.id}/form" class="btn btn-danger w-50">Donasi Sekarang</a>
@@ -74,6 +92,8 @@ export default function detailCampaignPage(app) {
           </div>
         </div>
       </section>
+
     </main>
+    ${renderFooter()}
   `;
 }
