@@ -84,7 +84,15 @@ export default function loginPage(app) {
           history.pushState(null, '', '/dashboard');
           window.dispatchEvent(new Event('popstate'));
         }, 1000);
-      } else {
+      } else if( result.status === 202 ){
+        Swal.fire({
+          icon: 'error',
+          title: 'Gagal Login',
+          text: 'Password atau Username salah.',
+          timer: 2000,
+          showConfirmButton: false
+        });
+      }else{
         Swal.fire({
           icon: 'error',
           title: 'Gagal Login',

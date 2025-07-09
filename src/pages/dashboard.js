@@ -5,7 +5,7 @@ import { checkLogin } from './conf/auth.js';
 
 export default async function dashboardPage(app) {
   const result = await checkLogin();
-  if (result.success !== true) {
+  if (result.status !== 200) {
     console.log('token expired');
     history.pushState(null, '', '/');
     return;
