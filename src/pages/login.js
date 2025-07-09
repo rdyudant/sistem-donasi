@@ -20,7 +20,12 @@ export default function loginPage(app) {
 
                 <div class="mb-3">
                   <label for="password" class="form-label">Password</label>
-                  <input type="password" class="form-control" id="password" name="password" required>
+                  <div class="input-group">
+                    <input type="password" class="form-control" id="password" name="password" required>
+                    <span class="input-group-text" id="togglePassword" style="cursor: pointer;">
+                      <i class="bi bi-eye-slash" id="eyeIcon"></i>
+                    </span>
+                  </div>
                 </div>
 
                 <div class="d-grid">
@@ -35,6 +40,18 @@ export default function loginPage(app) {
     </main>
     ${renderFooter()}
   `;
+
+  // Hide password input
+  const passwordInput = document.getElementById('password');
+  const togglePassword = document.getElementById('togglePassword');
+  const eyeIcon = document.getElementById('eyeIcon');
+
+  togglePassword.addEventListener('click', () => {
+    const isVisible = passwordInput.type === 'text';
+    passwordInput.type = isVisible ? 'password' : 'text';
+    eyeIcon.classList.toggle('bi-eye');
+    eyeIcon.classList.toggle('bi-eye-slash');
+  });
 
   // Event listener submit
   const form = document.getElementById('loginForm');

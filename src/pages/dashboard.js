@@ -3,13 +3,13 @@ import renderFooter from '../components/footer.js';
 import { url } from './conf/baseurl.js';
 import { checkLogin } from './conf/auth.js';
 
-// document.addEventListener('DOMContentLoaded', async () => {
-//     const result = await checkLogin();
-//     if (result.success !== true) {
-//       console.log('token expired')
-//       history.pushState(null, '', '/login');
-//     }
-// });
+document.addEventListener('DOMContentLoaded', async () => {
+    const result = await checkLogin();
+    if (result.success !== true) {
+      console.log('token expired')
+      history.pushState(null, '', '/signup');
+    }
+});
 
 export default function dashboardPage(app) {
     
