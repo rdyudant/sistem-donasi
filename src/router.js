@@ -8,6 +8,7 @@ import editCampaignPage from './pages/editCampaign.js';
 
 const routes = {
   '/': campaignPage,
+  '/home': campaignPage,
   '/signup': signupPage,
   '/login': loginPage,
   '/campaign/:id': detailCampaignPage,
