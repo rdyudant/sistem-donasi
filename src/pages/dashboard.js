@@ -7,7 +7,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     const result = await checkLogin();
     if (result.success !== true) {
       console.log('token expired')
-      history.pushState(null, '', '/signup');
+      history.pushState(null, '', '/');
     }
 });
 
