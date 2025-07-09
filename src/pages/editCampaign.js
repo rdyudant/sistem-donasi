@@ -25,7 +25,7 @@ export default function editCampaignPage(app) {
       <div class="container">
         <h2 class="mb-4 text-center">${campaign.title}</h2>
 
-        <form id="formEdit" class="bg-white p-4 rounded border border-2 shadow-sm">
+        <form id="formEdit" class="bg-white p-4 rounded border border-2 shadow">
 
           <input type="hidden" name="id" value="${campaign.id}" />
 

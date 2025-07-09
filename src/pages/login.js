@@ -12,7 +12,7 @@ export default function loginPage(app) {
           <div class="row justify-content-center">
             <div class="col-md-5">
               <h2 class="mb-4 text-center">Masuk Akun</h2>
-              <form id="loginForm" class="shadow p-4 bg-light rounded">
+              <form id="loginForm" class="shadow-lg p-4 bg-light rounded">
                 <div class="mb-3">
                   <label for="username" class="form-label">Username</label>
                   <input type="text" class="form-control" id="username" name="username" required>

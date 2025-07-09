@@ -28,9 +28,9 @@ export default function renderFooter() {
           <h6 class="fw-bold mb-3">Menu</h6>
           <ul class="list-unstyled footer-links">
             <li><a href="/" class="text-light text-decoration-none">Beranda</a></li>
-            <li><a href="/campaigns" class="text-light text-decoration-none">Kampanye</a></li>
-            <li><a href="/about" class="text-light text-decoration-none">Tentang Kami</a></li>
-            <li><a href="/contact" class="text-light text-decoration-none">Kontak</a></li>
+            <li><a href="javascript:void(0)" class="text-light text-decoration-none">Kampanye</a></li>
+            <li><a href="javascript:void(0)" class="text-light text-decoration-none">Tentang Kami</a></li>
+            <li><a href="javascript:void(0)" class="text-light text-decoration-none">Kontak</a></li>
           </ul>
         </div>
         
@@ -38,10 +38,10 @@ export default function renderFooter() {
         <div class="col-lg-2 col-md-6">
           <h6 class="fw-bold mb-3">Kategori</h6>
           <ul class="list-unstyled footer-links">
-            <li><a href="/category/pendidikan" class="text-light text-decoration-none">Pendidikan</a></li>
-            <li><a href="/category/kesehatan" class="text-light text-decoration-none">Kesehatan</a></li>
-            <li><a href="/category/bencana" class="text-light text-decoration-none">Bencana Alam</a></li>
-            <li><a href="/category/sosial" class="text-light text-decoration-none">Sosial</a></li>
+            <li><a href="javascript:void(0)" class="text-light text-decoration-none">Pendidikan</a></li>
+            <li><a href="javascript:void(0)" class="text-light text-decoration-none">Kesehatan</a></li>
+            <li><a href="javascript:void(0)" class="text-light text-decoration-none">Bencana Alam</a></li>
+            <li><a href="javascript:void(0)" class="text-light text-decoration-none">Sosial</a></li>
           </ul>
         </div>
         
@@ -77,8 +77,8 @@ export default function renderFooter() {
           </div>
           <div class="col-md-6">
             <div class="d-flex justify-content-center justify-content-md-end gap-3 mt-2 mt-md-0">
-              <a href="/privacy" class="text-light text-decoration-none small">Privacy Policy</a>
-              <a href="/terms" class="text-light text-decoration-none small">Terms of Service</a>
+              <a href="javascript:void(0)" class="text-light text-decoration-none small">Privacy Policy</a>
+              <a href="javascript:void(0)" class="text-light text-decoration-none small">Terms of Service</a>
             </div>
           </div>
         </div>
