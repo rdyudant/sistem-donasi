@@ -3,16 +3,13 @@ import renderFooter from '../components/footer.js';
 import { url } from './conf/baseurl.js';
 import { checkLogin } from './conf/auth.js';
 
-document.addEventListener('DOMContentLoaded', async () => {
-    const result = await checkLogin();
-    if (result.success !== true) {
-      console.log('token expired')
-      history.pushState(null, '', '/');
-    }
-});
-
-export default function dashboardPage(app) {
-    
+export default async function dashboardPage(app) {
+  const result = await checkLogin();
+  if (result.success !== true) {
+    console.log('token expired');
+    history.pushState(null, '', '/');
+    return;
+  }
   setPageTitle('Dashboard Admin');
   const campaigns = [
     {
