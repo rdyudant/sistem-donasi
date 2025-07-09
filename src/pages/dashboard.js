@@ -3,13 +3,13 @@ import renderFooter from '../components/footer.js';
 import { url } from './conf/baseurl.js';
 import { checkLogin } from './conf/auth.js';
 
-document.addEventListener('DOMContentLoaded', async () => {
-    const result = await checkLogin();
-    if (result.success !== true) {
-      console.log('token expired')
-      history.pushState(null, '', '/login');
-    }
-});
+// document.addEventListener('DOMContentLoaded', async () => {
+//     const result = await checkLogin();
+//     if (result.success !== true) {
+//       console.log('token expired')
+//       history.pushState(null, '', '/login');
+//     }
+// });
 
 export default function dashboardPage(app) {
     
@@ -78,8 +78,15 @@ export default function dashboardPage(app) {
                     <span class="badge bg-${getStatusBadgeClass(c.status)}">${c.status}</span>
                   </td>
                   <td>
-                    <a class="btn btn-sm btn-primary me-1" href="/edit-campaign/${c.id}">Edit</a>
-                    <button class="btn btn-sm btn-danger" onclick="deleteCampaign(${c.id})">Hapus</button>
+                    <a class="btn btn-sm btn-primary me-1" href="/edit-campaign/${c.id}">
+                      <i class="bi bi-pencil"></i> Edit
+                    </a>
+                    <a class="btn btn-sm btn-warning me-1">
+                      <i class="bi bi-share"></i> Share
+                    </a>
+                    <a class="btn btn-sm btn-dark me-1" onclick="openCollaboratorModal(${c.id})">
+                      <i class="bi bi-person"></i> Collaborator
+                    </a>
                   </td>
                 </tr>
               `).join('')}
@@ -88,18 +95,97 @@ export default function dashboardPage(app) {
         </div>
       </div>
     </main>
+    <!-- Modal Collaborator -->
+    <div class="modal fade" id="collabModal" tabindex="-1" aria-hidden="true">
+      <div class="modal-dialog">
+        <form id="formCollaborator" class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">Tambah Kolaborator</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+          </div>
+          <div class="modal-body">
+            <input type="hidden" id="campaignId" />
+            <div class="mb-3">
+              <label for="collabEmail" class="form-label">Masukkan Email Tujuan</label>
+              <input type="email" class="form-control" id="collabEmail" required>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="submit" class="btn btn-primary">Tambah</button>
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
+          </div>
+        </form>
+      </div>
+    </div>
     ${renderFooter()}
   `;
+
+  let currentCampaignId = null;
+
+  // Buka modal
+  window.openCollaboratorModal = function (id) {
+    currentCampaignId = id;
+    document.getElementById('campaignId').value = id;
+    document.getElementById('collabEmail').value = '';
+
+    const modal = new bootstrap.Modal(document.getElementById('collabModal'));
+    modal.show();
+  };
+
+  // Submit email kolaborator
+  document.getElementById('formCollaborator').addEventListener('submit', async (e) => {
+    e.preventDefault();
+
+    const email = document.getElementById('collabEmail').value;
+    const campaignId = document.getElementById('campaignId').value;
+
+    if (!email) return;
+
+    // Validasi format email
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+      Swal.fire({
+        icon: 'error',
+        title: 'Email tidak valid',
+        timer: 2000,
+        showConfirmButton: false
+      });
+      return;
+    }
+
+    // Simulasi kirim data
+    try {
+      const res = await fetch(`http://localhost:3000/api/campaigns/${campaignId}/collaborators`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email })
+      });
+
+      if (res.ok) {
+        Swal.fire({
+          icon: 'success',
+          title: 'Kolaborator ditambahkan!',
+          timer: 2000,
+          showConfirmButton: false
+        });
+      } else {
+        const err = await res.json();
+        Swal.fire({
+          icon: 'error',
+          title: 'Gagal menambahkan',
+          text: err.message || 'Terjadi kesalahan',
+          timer: 2000,
+          showConfirmButton: false
+        });
+      }
+    } catch (err) {
+      Swal.fire({
+        icon: 'error',
+        title: 'Gagal koneksi ke server',
+        timer: 2000,
+        showConfirmButton: false
+      });
+    }
+
+    bootstrap.Modal.getInstance(document.getElementById('collabModal')).hide();
+  });
 }
-
-// Dummy action (nanti ganti pakai modal/form dinamis)
-window.editCampaign = function (id) {
-  alert(`Edit campaign ID: ${id}`);
-};
-
-window.deleteCampaign = function (id) {
-  const konfirmasi = confirm(`Yakin ingin menghapus campaign ID ${id}?`);
-  if (konfirmasi) {
-    alert(`Campaign ${id} dihapus (simulasi)`);
-  }
-};

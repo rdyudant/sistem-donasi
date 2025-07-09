@@ -56,12 +56,25 @@ export default function loginPage(app) {
       const result = await res.json();
       
       if (result.status === 200) {
-        alert('Login berhasil!');
-        localStorage.setItem("token", result.data);
-        history.pushState(null, '', '/dashboard');
-        window.dispatchEvent(new Event('popstate'));
+        Swal.fire({
+          icon: 'success',
+          title: 'Login Berhasil!',
+          timer: 2000,
+          showConfirmButton: false
+        })
+        // Redirect setelah 1 detik (1000 ms)
+        setTimeout(() => {
+          history.pushState(null, '', '/dashboard');
+          window.dispatchEvent(new Event('popstate'));
+        }, 1000);
       } else {
-        alert(result.message || 'Login gagal.');
+        Swal.fire({
+          icon: 'error',
+          title: 'Gagal Login',
+          text: result.message || 'Terjadi kesalahan.',
+          timer: 2000,
+          showConfirmButton: false
+        });
       }
     } catch (err) {
       console.error(err);

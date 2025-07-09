@@ -57,17 +57,17 @@ export default function editCampaignPage(app) {
           </div>
 
           <div class="mb-3">
-            <label for="target" class="form-label">Target Donasi (Rp)</label>
-            <input type="number" class="form-control" id="target" name="target" min="1000" value="${campaign.goal}" required>
-          </div>
-
-          <div class="mb-3">
             <label for="status" class="form-label">Status Campaign</label>
             <select class="form-select" id="status" name="status" required>
               ${['draft', 'active', 'closed', 'cancelled'].map(stat => `
                 <option value="${stat}" ${stat === campaign.status ? 'selected' : ''}>${stat}</option>
               `).join('')}
             </select>
+          </div>
+
+          <div class="mb-3">
+            <label for="target" class="form-label">Target Donasi (Rp)</label>
+            <input type="number" class="form-control" id="target" name="target" min="1000" value="${campaign.goal}" required>
           </div>
 
           <div class="d-flex justify-content-between">

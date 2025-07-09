@@ -59,6 +59,18 @@ export default function signupPage(app) {
   const form = document.getElementById('signupForm');
   form.addEventListener('submit', async (e) => {
     e.preventDefault();
+    
+    // Validasi username hanya boleh huruf dan angka
+    const username = form.username.value;
+      if (!/^[a-zA-Z0-9]+$/.test(username)) {
+        Swal.fire({
+        icon: 'warning',
+        title: 'Username tidak valid',
+        text: 'Hanya boleh huruf dan angka tanpa spasi atau simbol.',
+        confirmButtonColor: '#3085d6'
+      });
+      return;
+      }
 
     const data = {
       username: form.username.value,
@@ -79,11 +91,25 @@ export default function signupPage(app) {
       const result = await res.json();
       
       if (result.status === 200) {
-        alert('Pendaftaran berhasil!');
-        history.pushState(null, '', '/login');
-        window.dispatchEvent(new Event('popstate'));
+        Swal.fire({
+          icon: 'success',
+          title: 'Pendaftaran Berhasil!',
+          timer: 2000,
+          showConfirmButton: false
+        })
+        // Redirect setelah 1 detik (1000 ms)
+        setTimeout(() => {
+          history.pushState(null, '', '/login');
+          window.dispatchEvent(new Event('popstate'));
+        }, 1000);
       } else {
-        alert(result.message || 'Pendaftaran gagal.');
+        Swal.fire({
+          icon: 'error',
+          title: 'Gagal Daftar',
+          text: result.message || 'Terjadi kesalahan.',
+          timer: 2000,
+          showConfirmButton: false
+        });
       }
     } catch (err) {
       console.error(err);
