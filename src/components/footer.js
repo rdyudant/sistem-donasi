@@ -72,7 +72,7 @@ export default function renderFooter() {
         <div class="row align-items-center">
           <div class="col-md-6">
             <p class="text-center text-md-start mb-0">
-              &copy; ${new Date().getFullYear()} DonasiKita
+              &copy; ${new Date().getFullYear()} DonasiKita.
             </p>
           </div>
           <div class="col-md-6">

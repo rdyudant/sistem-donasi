@@ -2,6 +2,7 @@ import renderHeader from '../components/header.js';
 import renderFooter from '../components/footer.js';
 
 export default function tambahCampaignPage(app) {
+  window.scrollTo(0, 0);
   setPageTitle('Tambah Campaign');
 
   app.innerHTML = `
@@ -9,8 +10,13 @@ export default function tambahCampaignPage(app) {
     <main class="py-5 mt-5">
       <div class="container">
         <h2 class="mb-4 text-center">Tambah Campaign Baru</h2>
+        <div class="mb-3">
+          <button type="button" id="btnKembali" class="btn btn-secondary">
+            <i class="bi bi-arrow-left"></i> Kembali
+          </button>
+        </div>
 
-        <form id="formTambah" class="bg-white p-4 rounded shadow-sm">
+        <form id="formTambah" class="bg-white p-4 rounded border border-2 shadow">
 
           <div class="mb-3">
             <label for="gambar" class="form-label">Unggah Gambar</label>
@@ -32,7 +38,23 @@ export default function tambahCampaignPage(app) {
 
           <div class="mb-3">
             <label for="kategori" class="form-label">Kategori</label>
-            <input type="text" class="form-control" id="kategori" name="kategori" required>
+            <select class="form-select" id="kategori" name="kategori" required>
+              <option value="Sosial" selected>Sosial</option>
+              <option value="Pendidikan">Pendidikan</option>
+              <option value="Religi">Religi</option>
+              <option value="Medis">Medis</option>
+              <option value="Lainnya">Lainnya</option>
+            </select>
+          </div>
+
+          <div class="mb-3">
+            <label for="status" class="form-label">Status Campaign</label>
+            <select class="form-select" id="status" name="status" required>
+              <option value="draft" selected>Draft</option>
+              <option value="active">Active</option>
+              <option value="closed">Closed</option>
+              <option value="cancelled">Cancelled</option>
+            </select>
           </div>
 
           <div class="mb-3">
@@ -49,6 +71,11 @@ export default function tambahCampaignPage(app) {
     ${renderFooter()}
   `;
 
+  // Event listener untuk tombol kembali
+  document.getElementById('btnKembali').addEventListener('click', () => {
+    history.back(); // kembali ke halaman sebelumnya
+  });
+
   // Inisialisasi TinyMCE untuk editor deskripsi
   tinymce.init({
     selector: '#deskripsi',
@@ -59,7 +86,7 @@ export default function tambahCampaignPage(app) {
     branding: false
   });
 
-  // 🟢 Ambil semua elemen setelah HTML sudah di-render
+  // Ambil semua elemen setelah HTML sudah di-render
   const form = document.getElementById('formTambah');
   const inputFile = document.getElementById('gambar');
   const preview = document.getElementById('preview-gambar');
@@ -95,6 +122,7 @@ export default function tambahCampaignPage(app) {
         judul: form.judul.value,
         deskripsi: tinymce.get('deskripsi').getContent(),
         kategori: form.kategori.value,
+        status: form.status.value,
         target: parseInt(form.target.value),
         imageName: file.name,
         imageBase64: base64

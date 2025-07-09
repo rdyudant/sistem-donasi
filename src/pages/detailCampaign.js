@@ -2,6 +2,7 @@ import renderHeader from '../components/header.js';
 import renderFooter from '../components/footer.js';
 
 export default function detailCampaignPage(app) {
+  window.scrollTo(0, 0);
   const campaignId = window.location.pathname.split('/').pop();
 
   // Data dummy sementara (bisa nanti fetch berdasarkan ID)
@@ -37,6 +38,11 @@ export default function detailCampaignPage(app) {
         <div class="container">
           <div class="row justify-content-center">
             <div class="col-md-8">
+              <div class="mb-3">
+                <button type="button" id="btnKembali" class="btn btn-secondary">
+                  <i class="bi bi-arrow-left"></i> Kembali
+                </button>
+              </div>
 
               <!-- Info Donasi -->
               <div class="bg-white p-4 rounded shadow-sm mb-4">
@@ -96,4 +102,9 @@ export default function detailCampaignPage(app) {
     </main>
     ${renderFooter()}
   `;
+
+  // Event listener untuk tombol kembali
+  document.getElementById('btnKembali').addEventListener('click', () => {
+    history.back(); // kembali ke halaman sebelumnya
+  });
 }

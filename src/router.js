@@ -4,6 +4,7 @@ import loginPage from './pages/login.js';
 import detailCampaignPage from './pages/detailCampaign.js';
 import dashboardPage from './pages/dashboard.js';
 import tambahCampaignPage from './pages/tambahCampaign.js';
+import editCampaignPage from './pages/editCampaign.js';
 
 const routes = {
   '/': campaignPage,
@@ -11,12 +12,16 @@ const routes = {
   '/login': loginPage,
   '/campaign/:id': detailCampaignPage,
   '/dashboard': dashboardPage,
-  '/tambah-campaign': tambahCampaignPage
+  '/tambah-campaign': tambahCampaignPage,
+  '/edit-campaign/:id': editCampaignPage
 };
 
 function parseRoute(path) {
   if (path.startsWith('/campaign/')) {
     return '/campaign/:id';
+  }
+  if (path.startsWith('/edit-campaign/')) {
+    return '/edit-campaign/:id';
   }
   return path;
 }

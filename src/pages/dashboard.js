@@ -8,15 +8,31 @@ export default function dashboardPage(app) {
       id: 1,
       title: "Bantu Renovasi Sekolah",
       goal: "50.000.000",
-      collected: "12.000.000"
+      collected: "12.000.000",
+      status: "active"
     },
     {
       id: 2,
       title: "Donasi Kesehatan Balita",
       goal: "20.000.000",
-      collected: "8.500.000"
+      collected: "8.500.000",
+      status: "closed"
     }
   ];
+
+  function getStatusBadgeClass(status) {
+    switch (status) {
+      case 'active':
+        return 'success';
+      case 'closed':
+        return 'danger';
+      case 'cancelled':
+        return 'danger';
+      case 'draft':
+      default:
+        return 'secondary';
+    }
+  }
 
   app.innerHTML = `
     ${renderHeader(false)} <!-- tidak pakai button -->
@@ -36,6 +52,7 @@ export default function dashboardPage(app) {
                 <th>Judul</th>
                 <th>Terkumpul</th>
                 <th>Target</th>
+                <th>Status</th>
                 <th>Aksi</th>
               </tr>
             </thead>
@@ -47,7 +64,10 @@ export default function dashboardPage(app) {
                   <td>Rp ${c.collected}</td>
                   <td>Rp ${c.goal}</td>
                   <td>
-                    <button class="btn btn-sm btn-primary me-1" onclick="editCampaign(${c.id})">Edit</button>
+                    <span class="badge bg-${getStatusBadgeClass(c.status)}">${c.status}</span>
+                  </td>
+                  <td>
+                    <a class="btn btn-sm btn-primary me-1" href="/edit-campaign/${c.id}">Edit</a>
                     <button class="btn btn-sm btn-danger" onclick="deleteCampaign(${c.id})">Hapus</button>
                   </td>
                 </tr>
