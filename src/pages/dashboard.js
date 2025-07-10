@@ -6,21 +6,11 @@ import { checkLogin } from './conf/auth.js';
 export default async function dashboardPage(app) {
   setPageTitle('Dashboard Admin');
   const result = await checkLogin();
-    if (result.status !== 200) {
-      console.log('token expired');
-      history.pushState(null, '', '/');
-      // Swal.fire({
-      //   icon: 'warning',
-      //   title: 'Sesi Berakhir!',
-      //   text: 'Silakan login kembali.',
-      //   timer: 3000,
-      //   showConfirmButton: false
-      // });
-      // setTimeout(() => {
-      //   window.location.href = '/';
-      // }, 1000);
-      return;
-    }
+  if (result.status !== 200 || localStorage.getItem('token') == null) {
+    console.log('token expired');
+    window.location.href = '/';
+    return;
+  }
   const campaigns = [
     {
       id: 1,
@@ -203,6 +193,6 @@ export default async function dashboardPage(app) {
 }
 
 function logout() {
-  localStorage.removeItem('token');
+  localStorage.clear()
   window.location.href = '/';
 }
