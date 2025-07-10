@@ -1,9 +1,25 @@
 import renderHeader from '../components/header.js';
 import renderFooter from '../components/footer.js';
+import { url } from './conf/baseurl.js';
+import { checkLogin } from './conf/auth.js';
 
-export default function editCampaignPage(app) {
+export default async function editCampaignPage(app) {
   window.scrollTo(0, 0);
   const campaignId = window.location.pathname.split('/').pop();
+  const result = await checkLogin();
+      if (result.status !== 200 || localStorage.getItem('token') == null) {
+        Swal.fire({
+          icon: 'warning',
+          title: 'Sesi Berakhir!',
+          text: 'Silakan login kembali.',
+          timer: 3000,
+          showConfirmButton: false
+        });
+        setTimeout(() => {
+          window.location.href = '/login';
+        }, 1000);
+        return;
+      }
 
   // Data dummy (gantilah dengan fetch API di tahap selanjutnya)
   const campaign = {

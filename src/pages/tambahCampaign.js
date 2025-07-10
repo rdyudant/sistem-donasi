@@ -7,9 +7,7 @@ export default async function tambahCampaignPage(app) {
   window.scrollTo(0, 0);
   setPageTitle('Tambah Campaign');
   const result = await checkLogin();
-    if (result.status !== 200) {
-      // console.log('token expired');
-      // history.pushState(null, '', '/');
+    if (result.status !== 200 || localStorage.getItem('token') == null) {
       Swal.fire({
         icon: 'warning',
         title: 'Sesi Berakhir!',

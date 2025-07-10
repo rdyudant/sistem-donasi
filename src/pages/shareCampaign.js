@@ -5,21 +5,37 @@ import { checkLogin } from './conf/auth.js';
 
 export default async function shareCampaignPage(app) {
   window.scrollTo(0, 0);
+  const result = await checkLogin();
+    if (result.status !== 200 || localStorage.getItem('token') == null) {
+      Swal.fire({
+        icon: 'warning',
+        title: 'Sesi Berakhir!',
+        text: 'Silakan login kembali.',
+        timer: 3000,
+        showConfirmButton: false
+      });
+      setTimeout(() => {
+        window.location.href = '/login';
+      }, 1000);
+      return;
+    }
+
   const campaignId = window.location.pathname.split('/').pop();
 
   // Data dummy sementara (bisa nanti fetch berdasarkan ID)
   const campaign = {
     id: campaignId,
     title: "Bantu Renovasi Sekolah",
-    available: "10.000.000",
-    collected: "12.000.000",
-    target: "50.000.000",
+    available: "10000000",
+    collected: "12000000",
+    target: "50000000",
     image: "https://picsum.photos/seed/sekolah/600/400",
     percentage: 24,
     totalDonatur: 85,
     tanggal: "08 Juli 2025",
     deskripsi: "Kami mengajak Anda untuk berpartisipasi dalam program renovasi sekolah di daerah pelosok. Bantuan Anda sangat berarti."
   };
+  const persentase = Math.round((campaign.collected / campaign.target) * 100);
 
   setPageTitle(`${campaign.title}`);
   app.innerHTML = `
@@ -48,23 +64,26 @@ export default async function shareCampaignPage(app) {
 
               <!-- Info Donasi -->
               <div class="bg-white p-4 rounded shadow-sm mb-4">
-                <div class="row">
+                <div class="row align-items-center mb-2">
                   <div class="col-md-6">
-                    <p class="mb-1 text-muted">Donasi tersedia</p>
-                    <h5 class="text-danger fw-bold">Rp${campaign.available}</h5>
-                  </div>
-                  <div class="col-md-6 text-end">
                     <p class="mb-1 text-muted">Donasi terkumpul</p>
-                    <h5 class="text-primary fw-bold">Rp${campaign.collected}</h5>
-                    <p class="mb-0">dari target <strong>Rp${campaign.target}</strong></p>
+                    <h5 class="text-danger fw-bold">Rp${campaign.collected}</h5>
+                  </div>
+                  <div class="col-md-6 text-md-end text-start">
+                    <p class="mb-1 text-muted">Donasi terkumpul</p>
+                    <h5 class="text-primary fw-bold">Rp${campaign.target}</h5>
                   </div>
                 </div>
 
-                <div class="progress my-3" style="height: 8px;">
-                  <div class="progress-bar bg-primary" role="progressbar" 
-                      style="width: ${campaign.percentage}%"
-                      aria-valuenow="${campaign.percentage}"
-                      aria-valuemin="0" aria-valuemax="100"></div>
+                <!-- Label persentase -->
+                <p class="text-center mb-1 small fw-semibold text-muted">${persentase}% dari target tercapai</p>
+
+                <!-- Progress bar -->
+                <div class="progress mb-3" style="height: 14px; border-radius: 10px;">
+                  <div class="progress-bar bg-primary" role="progressbar"
+                    style="width: ${persentase}%;"
+                    aria-valuenow="${persentase}" aria-valuemin="0" aria-valuemax="100">
+                  </div>
                 </div>
 
                 <div class="d-flex justify-content-between align-items-center mb-3">
