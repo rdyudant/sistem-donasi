@@ -1,9 +1,27 @@
 import renderHeader from '../components/header.js';
 import renderFooter from '../components/footer.js';
+import { url } from './conf/baseurl.js';
+import { checkLogin } from './conf/auth.js';
 
-export default function tambahCampaignPage(app) {
+export default async function tambahCampaignPage(app) {
   window.scrollTo(0, 0);
   setPageTitle('Tambah Campaign');
+  const result = await checkLogin();
+    if (result.status !== 200) {
+      // console.log('token expired');
+      // history.pushState(null, '', '/');
+      Swal.fire({
+        icon: 'warning',
+        title: 'Sesi Berakhir!',
+        text: 'Silakan login kembali.',
+        timer: 3000,
+        showConfirmButton: false
+      });
+      setTimeout(() => {
+        window.location.href = '/login';
+      }, 1000);
+      return;
+    }
 
   app.innerHTML = `
     ${renderHeader(false)}

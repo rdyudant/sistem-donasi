@@ -4,13 +4,23 @@ import { url } from './conf/baseurl.js';
 import { checkLogin } from './conf/auth.js';
 
 export default async function dashboardPage(app) {
-  const result = await checkLogin();
-  if (result.status !== 200) {
-    console.log('token expired');
-    history.pushState(null, '', '/');
-    return;
-  }
   setPageTitle('Dashboard Admin');
+  const result = await checkLogin();
+    if (result.status !== 200) {
+      console.log('token expired');
+      history.pushState(null, '', '/');
+      // Swal.fire({
+      //   icon: 'warning',
+      //   title: 'Sesi Berakhir!',
+      //   text: 'Silakan login kembali.',
+      //   timer: 3000,
+      //   showConfirmButton: false
+      // });
+      // setTimeout(() => {
+      //   window.location.href = '/';
+      // }, 1000);
+      return;
+    }
   const campaigns = [
     {
       id: 1,
@@ -43,7 +53,7 @@ export default async function dashboardPage(app) {
   }
 
   app.innerHTML = `
-    ${renderHeader(false)} <!-- tidak pakai button -->
+    ${renderHeader(false, true)}
     <main class="py-5 mt-5">
       <div class="container">
         <h2 class="mb-4 text-center">Kelola Data Campaign</h2>
@@ -75,15 +85,17 @@ export default async function dashboardPage(app) {
                     <span class="badge bg-${getStatusBadgeClass(c.status)}">${c.status}</span>
                   </td>
                   <td>
-                    <a class="btn btn-sm btn-primary me-1" href="/edit-campaign/${c.id}">
-                      <i class="bi bi-pencil"></i> Edit
-                    </a>
-                    <a class="btn btn-sm btn-warning me-1">
-                      <i class="bi bi-share"></i> Share
-                    </a>
-                    <a class="btn btn-sm btn-dark me-1" onclick="openCollaboratorModal(${c.id})">
-                      <i class="bi bi-person"></i> Collaborator
-                    </a>
+                    <div class="d-flex flex-wrap gap-2">
+                      <a class="btn btn-sm btn-primary" href="/edit-campaign/${c.id}">
+                        <i class="bi bi-pencil"></i> Edit
+                      </a>
+                      <a class="btn btn-sm btn-warning" href="/share-campaign/${c.id}">
+                        <i class="bi bi-share"></i> Share
+                      </a>
+                      <a class="btn btn-sm btn-dark" onclick="openCollaboratorModal(${c.id})">
+                        <i class="bi bi-person"></i> Collaborator
+                      </a>
+                    </div>
                   </td>
                 </tr>
               `).join('')}
@@ -185,4 +197,12 @@ export default async function dashboardPage(app) {
 
     bootstrap.Modal.getInstance(document.getElementById('collabModal')).hide();
   });
+
+  // Tambah event listener untuk tombol logout
+  document.getElementById('btnLogout')?.addEventListener('click', logout);
+}
+
+function logout() {
+  localStorage.removeItem('token');
+  window.location.href = '/';
 }

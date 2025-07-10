@@ -10,14 +10,14 @@ export default function renderFooter() {
           <p class="text-light mb-3">Platform donasi terpercaya yang menghubungkan para dermawan dengan mereka yang membutuhkan bantuan.</p>
           
           <!-- Social Media -->
-          <div class="d-flex gap-2">
-            <a href="#" class="btn btn-outline-light btn-sm rounded-circle" style="width: 36px; height: 36px;">
+          <div class="d-flex gap-2 justify-content-center justify-content-md-start">
+            <a href="javascript:void(0)" class="btn btn-outline-light btn-sm rounded-circle" style="width: 36px; height: 36px;">
               <i class="fab fa-facebook-f"></i>
             </a>
-            <a href="#" class="btn btn-outline-light btn-sm rounded-circle" style="width: 36px; height: 36px;">
+            <a href="javascript:void(0)" class="btn btn-outline-light btn-sm rounded-circle" style="width: 36px; height: 36px;">
               <i class="fab fa-twitter"></i>
             </a>
-            <a href="#" class="btn btn-outline-light btn-sm rounded-circle" style="width: 36px; height: 36px;">
+            <a href="javascript:void(0)" class="btn btn-outline-light btn-sm rounded-circle" style="width: 36px; height: 36px;">
               <i class="fab fa-instagram"></i>
             </a>
           </div>
