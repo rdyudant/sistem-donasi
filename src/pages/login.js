@@ -73,6 +73,7 @@ export default function loginPage(app) {
       const result = await res.json();
       
       if (result.status === 200) {
+        localStorage.setItem('token', result.refreshToken); // Simpan token ke localStorage
         Swal.fire({
           icon: 'success',
           title: 'Login Berhasil!',
