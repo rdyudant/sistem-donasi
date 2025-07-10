@@ -53,7 +53,7 @@ export default function detailCampaignPage(app) {
                     <h5 class="text-danger fw-bold">Rp${campaign.collected}</h5>
                   </div>
                   <div class="col-md-6 text-md-end text-start">
-                    <p class="mb-1 text-muted">Donasi terkumpul</p>
+                    <p class="mb-1 text-muted">Target donasi</p>
                     <h5 class="text-primary fw-bold">Rp${campaign.target}</h5>
                   </div>
                 </div>
