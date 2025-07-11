@@ -86,7 +86,7 @@ export default async function shareCampaignPage(app) {
                           <span class="progress-text">dari target tercapai</span>
                       </div>
                       <div class="custom-progress">
-                          <div class="progress-fill" id="progress-fill" style="width: ${persentase}%;"></div>
+                          <div class="progress-fill" id="progress-fill" style="width: 0%;"></div>
                       </div>
                   </div>
                   
@@ -417,18 +417,15 @@ export default async function shareCampaignPage(app) {
     
     updateNumber();
   }
-  
-  // Initialize animations when page loads
-  window.addEventListener('load', function() {
-    // Animate the numbers
-    animateNumber(document.getElementById('collected-amount'), 0, parseInt(campaign.collected), 2000);
-    animateNumber(document.getElementById('target-amount'), 0, parseInt(campaign.target), 2500);
-    animateNumber(document.getElementById('supporters-count'), 0, parseInt(campaign.totalDonatur), 2000);
-    animateNumber(document.getElementById('percentage'), 0, parseInt(persentase), 2000);
 
-    // Animate progress bar
-    setTimeout(() => {
-        document.getElementById('progress-fill').style.width = '${persentase}%';
-    }, 500);
-  });
+  // Animate the numbers
+  animateNumber(document.getElementById('collected-amount'), 0, parseInt(campaign.collected), 2000);
+  animateNumber(document.getElementById('target-amount'), 0, parseInt(campaign.target), 2500);
+  animateNumber(document.getElementById('supporters-count'), 0, parseInt(campaign.totalDonatur), 2000);
+  animateNumber(document.getElementById('percentage'), 0, parseInt(persentase), 2000);
+
+  // Animate progress bar
+  setTimeout(() => {
+      document.getElementById('progress-fill').style.width = persentase + '%';
+  }, 500);
 }
