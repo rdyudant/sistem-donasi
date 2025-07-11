@@ -96,7 +96,7 @@ export default async function dashboardPage(app) {
     </main>
     <!-- Modal Collaborator -->
     <div class="modal fade" id="collabModal" tabindex="-1" aria-hidden="true">
-      <div class="modal-dialog">
+      <div class="modal-dialog modal-dialog-centered">
         <form id="formCollaborator" class="modal-content">
           <div class="modal-header">
             <h5 class="modal-title">Tambah Kolaborator</h5>
@@ -196,3 +196,10 @@ function logout() {
   localStorage.clear()
   window.location.href = '/';
 }
+
+// Navigasi SPA
+window.navigate = function (event, path) {
+  event.preventDefault();
+  history.pushState(null, '', `/${path}`);
+  window.dispatchEvent(new Event('popstate'));
+};

@@ -39,7 +39,7 @@ export default async function shareCampaignPage(app) {
 
   setPageTitle(`${campaign.title}`);
   app.innerHTML = `
-    ${renderHeader(true)} <!-- pakai button -->
+    ${renderHeader(false, true)} <!-- pakai button -->
     <main>
 
       <!-- Hero Section dengan Background Gambar -->
@@ -111,7 +111,7 @@ export default async function shareCampaignPage(app) {
 
               <!-- Tombol CTA -->
               <div class="d-flex gap-2">
-                <a href="#" class="btn btn-outline-primary w-50"><i class="bi bi-share"></i> Bagikan</a>
+                <a href="/share/${campaign.id}" class="btn btn-outline-primary w-50"><i class="bi bi-share"></i> Bagikan</a>
                 <a href="/donasi/${campaign.id}/form" class="btn btn-danger w-50">Donasi Sekarang</a>
               </div>
 
@@ -419,13 +419,13 @@ export default async function shareCampaignPage(app) {
   }
 
   // Animate the numbers
-  animateNumber(document.getElementById('collected-amount'), 0, parseInt(campaign.collected), 2000);
-  animateNumber(document.getElementById('target-amount'), 0, parseInt(campaign.target), 2500);
-  animateNumber(document.getElementById('supporters-count'), 0, parseInt(campaign.totalDonatur), 2000);
-  animateNumber(document.getElementById('percentage'), 0, parseInt(persentase), 2000);
+  animateNumber(document.getElementById('collected-amount'), 0, parseInt(campaign.collected), 3500);
+  animateNumber(document.getElementById('target-amount'), 0, parseInt(campaign.target), 4000);
+  animateNumber(document.getElementById('supporters-count'), 0, parseInt(campaign.totalDonatur), 3500);
+  animateNumber(document.getElementById('percentage'), 0, parseInt(persentase), 3500);
 
   // Animate progress bar
   setTimeout(() => {
       document.getElementById('progress-fill').style.width = persentase + '%';
-  }, 500);
+  }, 1500);
 }

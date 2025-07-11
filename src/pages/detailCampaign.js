@@ -412,13 +412,13 @@ export default function detailCampaignPage(app) {
   }
   
     // Animate the numbers
-    animateNumber(document.getElementById('collected-amount'), 0, parseInt(campaign.collected), 2000);
-    animateNumber(document.getElementById('target-amount'), 0, parseInt(campaign.target), 2500);
-    animateNumber(document.getElementById('supporters-count'), 0, parseInt(campaign.totalDonatur), 2000);
-    animateNumber(document.getElementById('percentage'), 0, parseInt(persentase), 2000);
+    animateNumber(document.getElementById('collected-amount'), 0, parseInt(campaign.collected), 3500);
+    animateNumber(document.getElementById('target-amount'), 0, parseInt(campaign.target), 4000);
+    animateNumber(document.getElementById('supporters-count'), 0, parseInt(campaign.totalDonatur), 3500);
+    animateNumber(document.getElementById('percentage'), 0, parseInt(persentase), 3500);
 
     // Animate progress bar
     setTimeout(() => {
         document.getElementById('progress-fill').style.width = persentase + '%';
-    }, 500);
+    }, 1500);
 }
