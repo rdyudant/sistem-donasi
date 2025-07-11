@@ -24,7 +24,7 @@ export default async function shareThisPage(app) {
   app.innerHTML = `
     ${renderHeader(false, true)} <!-- pakai button -->
     <main class="py-5 mt-5">
-      <div class="container">
+      <div class="container mt-3">
         <div class="row justify-content-center">
           <div class="col-md-8">
 

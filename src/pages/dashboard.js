@@ -4,6 +4,7 @@ import { url } from './conf/baseurl.js';
 import { checkLogin } from './conf/auth.js';
 
 export default async function dashboardPage(app) {
+  window.scrollTo(0, 0);
   setPageTitle('Dashboard Admin');
   const result = await checkLogin();
   if (result.status !== 200 || localStorage.getItem('token') == null) {
@@ -45,7 +46,7 @@ export default async function dashboardPage(app) {
   app.innerHTML = `
     ${renderHeader(false, true)}
     <main class="py-5 mt-5">
-      <div class="container">
+      <div class="container mt-2">
         <h2 class="mb-4 text-center">Kelola Data Campaign</h2>
         <div class="text-end mb-3">
           <a href="/tambah-campaign" class="btn btn-success" id="btnTambah">
@@ -75,7 +76,7 @@ export default async function dashboardPage(app) {
                     <span class="badge bg-${getStatusBadgeClass(c.status)}">${c.status}</span>
                   </td>
                   <td>
-                    <div class="d-flex flex-wrap gap-2">
+                    <div class="d-flex flex-wrap gap-1">
                       <a class="btn btn-sm btn-primary" href="/edit-campaign/${c.id}">
                         <i class="bi bi-pencil"></i> Edit
                       </a>

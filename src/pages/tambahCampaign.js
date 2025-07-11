@@ -24,7 +24,7 @@ export default async function tambahCampaignPage(app) {
   app.innerHTML = `
     ${renderHeader(false)}
     <main class="py-5 mt-5">
-      <div class="container">
+      <div class="container mt-2">
         <h2 class="mb-4 text-center">Tambah Campaign Baru</h2>
         <div class="mb-3">
           <button type="button" id="btnKembali" class="btn btn-secondary">

@@ -75,7 +75,7 @@ export default async function campaignPage(app) {
     <div class="py-5 mt-5 position-relative overflow-hidden">
       <div class="container text-center text-dark position-relative">
         <div class="row justify-content-center">
-          <div class="col-lg-8">
+          <div class="col-lg-8 mt-4">
             <h1 class="display-4 fw-bold mb-4">Bersama #DonasiKita</h1>
             <p class="lead mb-4 fs-5">Dukung mereka yang membutuhkan bantuan dengan berdonasi sekarang. Setiap rupiah yang Anda sumbangkan akan membuat perbedaan nyata.</p>
             <div class="d-flex justify-content-center gap-4 mb-4">

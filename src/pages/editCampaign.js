@@ -38,7 +38,7 @@ export default async function editCampaignPage(app) {
   app.innerHTML = `
     ${renderHeader(false)}
     <main class="py-5 mt-5">
-      <div class="container">
+      <div class="container mt-3">
         <h2 class="mb-4 text-center">${campaign.title}</h2>
 
         <form id="formEdit" class="bg-white p-4 rounded border border-2 shadow">

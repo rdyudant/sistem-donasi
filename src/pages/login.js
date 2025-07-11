@@ -3,14 +3,15 @@ import renderFooter from '../components/footer.js';
 import { url } from './conf/baseurl.js';
 
 export default function loginPage(app) {
+  window.scrollTo(0, 0);
   setPageTitle('Masuk Akun');
   app.innerHTML = `
     ${renderHeader(false)} <!-- tidak pakai button -->
     <main>
-      <section class="py-5 mt-4">
+      <section class="py-5 mt-5">
         <div class="container">
           <div class="row justify-content-center">
-            <div class="col-md-5">
+            <div class="col-md-5 mt-3">
               <h2 class="mb-4 text-center">Masuk Akun</h2>
               <form id="loginForm" class="shadow-lg p-4 bg-light rounded">
                 <div class="mb-3">
