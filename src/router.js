@@ -6,7 +6,6 @@ import dashboardPage from './pages/dashboard.js';
 import tambahCampaignPage from './pages/tambahCampaign.js';
 import editCampaignPage from './pages/editCampaign.js';
 import shareCampaignPage from './pages/shareCampaign.js';
-import shareThisPage from './pages/shareThis.js';
 
 const routes = {
   '/': campaignPage,
@@ -18,7 +17,6 @@ const routes = {
   '/tambah-campaign': tambahCampaignPage,
   '/edit-campaign/:id': editCampaignPage,
   '/share-campaign/:id': shareCampaignPage,
-  '/share/:id': shareThisPage
 };
 
 function parseRoute(path) {
@@ -30,9 +28,6 @@ function parseRoute(path) {
   }
   if (path.startsWith('/share-campaign/')) {
     return '/share-campaign/:id';
-  }
-  if (path.startsWith('/share/')) {
-    return '/share/:id';
   }
   return path;
 }

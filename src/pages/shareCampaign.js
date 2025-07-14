@@ -111,7 +111,9 @@ export default async function shareCampaignPage(app) {
 
               <!-- Tombol CTA -->
               <div class="d-flex gap-2">
-                <a href="/share/${campaign.id}" class="btn btn-outline-primary w-50"><i class="bi bi-share"></i> Bagikan</a>
+                <a class="btn btn-outline-primary w-50" onclick="openShareModal(${campaign.id})">
+                  <i class="bi bi-share"></i> Bagikan
+                </a>
                 <a href="/donasi/${campaign.id}/form" class="btn btn-danger w-50">Donasi Sekarang</a>
               </div>
 
@@ -122,6 +124,41 @@ export default async function shareCampaignPage(app) {
 
     </main>
     ${renderFooter()}
+
+    <!-- Modal Share Campaign -->
+    <div class="modal fade" id="modalShareCampaign" tabindex="-1" aria-labelledby="modalShareLabel" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content p-4">
+          <div class="modal-header border-0">
+            <h5 class="modal-title w-100 text-center fw-bold" id="modalShareLabel">Bagikan Campaign Ini</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+
+          <div class="modal-body text-center">
+
+            <button class="btn btn-success m-2" id="btnShareWa">
+              <i class="bi bi-whatsapp"></i> WhatsApp
+            </button>
+
+            <button class="btn btn-primary m-2" id="btnShareFb">
+              <i class="bi bi-facebook"></i> Facebook
+            </button>
+
+            <button class="btn btn-info text-white m-2" id="btnShareTw">
+              <i class="bi bi-twitter"></i> Twitter
+            </button>
+
+            <div class="mt-4 mb-3">
+              <div class="input-group" style="max-width: 500px; margin: 0 auto;">
+                <input type="text" class="form-control" id="shareLink" readonly>
+                <button class="btn btn-outline-secondary" id="btnSalin">Salin</button>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </div>
 
     <style>
       @keyframes gradientMove {
@@ -428,4 +465,41 @@ export default async function shareCampaignPage(app) {
   setTimeout(() => {
       document.getElementById('progress-fill').style.width = persentase + '%';
   }, 1500);
+
+  window.openShareModal = function (campaignId) {
+    const shareUrl = `${url}/share-campaign/${campaignId}`;
+
+    // Set value input dan tombol share
+    document.getElementById('shareLink').value = shareUrl;
+
+    document.getElementById('btnShareWa').onclick = () => {
+      window.open(`https://wa.me/?text=${encodeURIComponent(shareUrl)}`, '_blank');
+    };
+
+    document.getElementById('btnShareFb').onclick = () => {
+      window.open(`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(shareUrl)}`, '_blank');
+    };
+
+    document.getElementById('btnShareTw').onclick = () => {
+      window.open(`https://twitter.com/intent/tweet?url=${encodeURIComponent(shareUrl)}`, '_blank');
+    };
+
+    document.getElementById('btnSalin').onclick = () => {
+      const input = document.getElementById('shareLink');
+      input.select();
+      document.execCommand('copy');
+
+      Swal.fire({
+        icon: 'success',
+        title: 'Link disalin!',
+        timer: 2000,
+        showConfirmButton: false
+      });
+    };
+
+    // Tampilkan modal
+    const modal = new bootstrap.Modal(document.getElementById('modalShareCampaign'));
+    modal.show();
+  }
+
 }
