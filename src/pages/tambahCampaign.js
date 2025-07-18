@@ -161,7 +161,6 @@ export default async function tambahCampaignPage(app) {
           alert(err.message || 'Gagal menambahkan campaign');
         }
       } catch (err) {
-        console.error(err);
         alert('Gagal mengirim data.');
       }
     };
