@@ -99,7 +99,18 @@ export default async function tambahCampaignPage(app) {
     menubar: false,
     plugins: 'lists link image preview',
     toolbar: 'undo redo | bold italic underline | bullist numlist | link image | preview',
-    branding: false
+    branding: false,
+    image_dimensions: false,
+    image_caption: true,
+    image_class_list: [
+      { title: 'Responsif', value: 'img-fluid' }
+    ],
+    content_style: `
+      img {
+        max-width: 100%;
+        height: auto;
+      }
+    `
   });
 
   // Ambil semua elemen setelah HTML sudah di-render

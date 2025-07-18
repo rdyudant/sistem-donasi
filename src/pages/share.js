@@ -85,7 +85,9 @@ export default async function sharePage(app) {
               <div class="bg-white p-4 rounded shadow-sm mb-4">
                 <p class="text-muted mb-1">${campaign.createdAt}</p>
                 <h5 class="fw-semibold mb-3">Cerita Penggalangan Dana</h5>
-                <p>${campaign.description}</p>
+                <div class="description">
+                  ${campaign.description}
+                </div>
               </div>
 
               <!-- Tombol CTA -->
@@ -143,6 +145,13 @@ export default async function sharePage(app) {
       @keyframes gradientMove {
             0%, 100% { background-position: 0% 50%; }
             50% { background-position: 100% 50%; }
+        }
+
+        .description img {
+            max-width: 100%;
+            height: auto;
+            display: block;
+            margin: 10px auto;
         }
         
         .card-header {
