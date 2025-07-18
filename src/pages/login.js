@@ -39,7 +39,6 @@ export default function loginPage(app) {
         </div>
       </section>
     </main>
-    ${renderFooter()}
   `;
 
   // Hide password input
@@ -74,6 +73,7 @@ export default function loginPage(app) {
       const result = await res.json();
       if (result.status === 200) {
         localStorage.setItem('token', result.data);
+        localStorage.setItem('username', form.username.value);
         Swal.fire({
           icon: 'success',
           title: 'Login Berhasil!',

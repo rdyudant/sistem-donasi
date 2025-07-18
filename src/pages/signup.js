@@ -17,6 +17,7 @@ export default function signupPage(app) {
                 <div class="mb-3">
                   <label for="username" class="form-label">Username</label>
                   <input type="text" class="form-control" id="username" name="username" required>
+                  <span style="font-size: 12px;"><i>Username hanya boleh berupa huruf dan angka</i></span>
                 </div>
 
                 <div class="mb-3">

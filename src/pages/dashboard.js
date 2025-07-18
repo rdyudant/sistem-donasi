@@ -12,22 +12,18 @@ export default async function dashboardPage(app) {
     window.location.href = '/';
     return;
   }
-  const campaigns = [
-    {
-      id: 1,
-      title: "Bantu Renovasi Sekolah",
-      goal: "50.000.000",
-      collected: "12.000.000",
-      status: "active"
-    },
-    {
-      id: 2,
-      title: "Donasi Kesehatan Balita",
-      goal: "20.000.000",
-      collected: "8.500.000",
-      status: "closed"
-    }
-  ];
+
+  const res = await fetch(url + '/campaign/daftar-campaign', {
+    method: 'GET',
+    headers: { 
+                'Content-Type': 'application/json',
+                'Authorization': 'Bearer ' + localStorage.getItem('token')  
+            }
+  });
+
+  const respons = await res.json();
+  const campaigns = respons.data
+  console.log(campaigns)
 
   function getStatusBadgeClass(status) {
     switch (status) {
@@ -49,6 +45,9 @@ export default async function dashboardPage(app) {
       <div class="container mt-2">
         <h2 class="mb-4 text-center">Kelola Data Campaign</h2>
         <div class="text-end mb-3">
+          <a href="/following-campaign" class="btn btn-primary" id="btnTambah">
+            <i class="bi bi-people"></i> Campaign yang diikuti
+          </a>
           <a href="/tambah-campaign" class="btn btn-success" id="btnTambah">
             <i class="bi bi-plus-circle"></i> Tambah Campaign
           </a>
@@ -70,8 +69,8 @@ export default async function dashboardPage(app) {
                 <tr>
                   <td>${i + 1}</td>
                   <td>${c.title}</td>
-                  <td>Rp ${c.collected}</td>
-                  <td>Rp ${c.goal}</td>
+                  <td>Rp ${c.collected_amount}</td>
+                  <td>Rp ${c.target_amount}</td>
                   <td>
                     <span class="badge bg-${getStatusBadgeClass(c.status)}">${c.status}</span>
                   </td>
@@ -83,7 +82,7 @@ export default async function dashboardPage(app) {
                       <a class="btn btn-sm btn-warning" href="/share-campaign/${c.id}">
                         <i class="bi bi-share"></i> Share
                       </a>
-                      <a class="btn btn-sm btn-dark" onclick="openCollaboratorModal(${c.id})">
+                      <a class="btn btn-sm btn-dark" href="/collaborator/${c.id}">
                         <i class="bi bi-person"></i> Collaborator
                       </a>
                     </div>
@@ -117,7 +116,6 @@ export default async function dashboardPage(app) {
         </form>
       </div>
     </div>
-    ${renderFooter()}
   `;
 
   let currentCampaignId = null;

@@ -21,17 +21,16 @@ export default async function editCampaignPage(app) {
         return;
       }
 
-  // Data dummy (gantilah dengan fetch API di tahap selanjutnya)
-  const campaign = {
-    id: campaignId,
-    title: "Bantu Renovasi Sekolah",
-    description: "<p>Bantu renovasi sekolah rusak agar anak-anak bisa belajar dengan nyaman.</p>",
-    category: "Pendidikan",
-    goal: 50000000,
-    status: "active",
-    imageName: "renovasi.jpg",
-    imageBase64: "" // kosongkan dulu karena tidak akan ditampilkan
-  };
+  const res = await fetch(url + '/campaign/daftar-campaign/'+campaignId, {
+    method: 'GET',
+    headers: { 
+                'Content-Type': 'application/json',
+                'Authorization': 'Bearer ' + localStorage.getItem('token')  
+            }
+  });
+
+  const respons = await res.json();
+  const campaign = respons.data;
 
   setPageTitle(`Edit Campaign`);
 
@@ -83,7 +82,7 @@ export default async function editCampaignPage(app) {
 
           <div class="mb-3">
             <label for="target" class="form-label">Target Donasi (Rp)</label>
-            <input type="number" class="form-control" id="target" name="target" min="1000" value="${campaign.goal}" required>
+            <input type="number" class="form-control" id="target" name="target" min="1000" value="${campaign.target_amount}" required>
           </div>
 
           <div class="d-flex justify-content-between">
@@ -92,11 +91,9 @@ export default async function editCampaignPage(app) {
             </button>
             <button type="submit" class="btn btn-primary">Simpan Perubahan</button>
           </div>
-
         </form>
       </div>
     </main>
-    ${renderFooter()}
   `;
 
   // Preview gambar
@@ -158,18 +155,22 @@ export default async function editCampaignPage(app) {
         category: form.kategori.value,
         goal: parseInt(form.target.value),
         status: form.status.value,
-        imageName: imageName,
         imageBase64: imageBase64
       };
 
       console.log('Data update:', updated);
 
       try {
-        const res = await fetch(`http://localhost:3000/api/campaigns/${campaign.id}`, {
+        const res = await fetch(`${ url }/campaign/campaign-update/${campaign.id}`, {
           method: 'PUT',
-          headers: { 'Content-Type': 'application/json' },
+          headers: { 
+              'Content-Type': 'application/json',
+              'Authorization': 'Bearer ' + localStorage.getItem('token') 
+           },
           body: JSON.stringify(updated)
         });
+
+        const response = await res.json()
 
         if (res.ok) {
           alert('Campaign berhasil diperbarui!');

@@ -261,6 +261,11 @@ export default async function campaignPage(app) {
       }
     </style>
   `;
+  document.getElementById('btnLogout')?.addEventListener('click', logout);
+  function logout() {
+    localStorage.clear()
+    window.location.href = '/';
+  }
 }
 
 window.navigate = function (event, path) {

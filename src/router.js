@@ -6,6 +6,9 @@ import dashboardPage from './pages/dashboard.js';
 import tambahCampaignPage from './pages/tambahCampaign.js';
 import editCampaignPage from './pages/editCampaign.js';
 import shareCampaignPage from './pages/shareCampaign.js';
+import colabolatorPage from './pages/colaborator.js';
+import followingCampaignPage from './pages/followingCampaign.js';
+import sharePage from './pages/share.js';
 
 const routes = {
   '/': campaignPage,
@@ -17,9 +20,15 @@ const routes = {
   '/tambah-campaign': tambahCampaignPage,
   '/edit-campaign/:id': editCampaignPage,
   '/share-campaign/:id': shareCampaignPage,
+  '/collaborator/:id': colabolatorPage,
+  '/following-campaign': followingCampaignPage,
+  '/share/:id/:ref': sharePage
 };
 
 function parseRoute(path) {
+  if (path.startsWith('/share/')) {
+    return '/share/:id/:ref';
+  }
   if (path.startsWith('/campaign/')) {
     return '/campaign/:id';
   }
@@ -28,6 +37,9 @@ function parseRoute(path) {
   }
   if (path.startsWith('/share-campaign/')) {
     return '/share-campaign/:id';
+  }
+  if (path.startsWith('/collaborator/')) {
+    return '/collaborator/:id';
   }
   return path;
 }

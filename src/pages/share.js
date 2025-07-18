@@ -3,44 +3,28 @@ import renderFooter from '../components/footer.js';
 import { url, url_images } from './conf/baseurl.js';
 import { checkLogin } from './conf/auth.js';
 
-export default async function shareCampaignPage(app) {
+export default async function sharePage(app) {
   window.scrollTo(0, 0);
-  const result = await checkLogin();
-    if (result.status !== 200 || localStorage.getItem('token') == null) {
-      Swal.fire({
-        icon: 'warning',
-        title: 'Sesi Berakhir!',
-        text: 'Silakan login kembali.',
-        timer: 3000,
-        showConfirmButton: false
-      });
-      setTimeout(() => {
-        window.location.href = '/login';
-      }, 1000);
-      return;
-    }
 
-  const campaignId = window.location.pathname.split('/').pop();
   const url_ = window.location.href.split('/')
   const donation_url = `${ url_[0] }//${ url_[2] }/`
-  // Data dummy sementara (bisa nanti fetch berdasarkan ID)
+  const campaignId = url_[4];
+  const user = url_[5];
+  if(!url_[5]) return window.location.href = '/login';
 
-  const res = await fetch(url + '/campaign/daftar-campaign/'+campaignId, {
+  const res = await fetch(url + '/campaign/share-campaign/'+campaignId, {
     method: 'GET',
     headers: { 
-                'Content-Type': 'application/json',
-                'Authorization': 'Bearer ' + localStorage.getItem('token')  
+                'Content-Type': 'application/json'
             }
   });
 
   const respons = await res.json();
   const campaign = respons.data;
-  console.log(respons.data)
   const persentase = Math.round((campaign.collected_amount / campaign.target_amount) * 100);
 
   setPageTitle(`${campaign.title}`);
   app.innerHTML = `
-    ${renderHeader(false, true)} <!-- pakai button -->
     <main>
 
       <!-- Hero Section dengan Background Gambar -->
@@ -57,12 +41,6 @@ export default async function shareCampaignPage(app) {
         <div class="container">
           <div class="row justify-content-center">
             <div class="col-md-8">
-              <div class="mb-3">
-                <button type="button" id="btnKembali" class="btn btn-secondary">
-                  <i class="bi bi-arrow-left"></i> Kembali
-                </button>
-              </div>
-
               <!-- Info Donasi -->
               <div class="bg-white p-4 rounded shadow-sm mb-4">
                 <div class="card-body">
@@ -420,11 +398,6 @@ export default async function shareCampaignPage(app) {
     </style>
   `;
 
-  // Event listener untuk tombol kembali
-  document.getElementById('btnKembali').addEventListener('click', () => {
-    history.back(); // kembali ke halaman sebelumnya
-  });
-
   // Animate numbers counting up
   function animateNumber(element, start, end, duration) {
     const startTime = Date.now();
@@ -468,7 +441,7 @@ export default async function shareCampaignPage(app) {
   }, 1500);
 
   window.openShareModal = function (campaignId) {
-    const shareUrl = `${donation_url}share/${campaignId}/${localStorage.getItem("username")}`;
+    const shareUrl = window.location.href;
 
     // Set value input dan tombol share
     document.getElementById('shareLink').value = shareUrl;

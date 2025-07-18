@@ -49,7 +49,7 @@ export default async function tambahCampaignPage(app) {
 
           <div class="mb-3">
             <label for="deskripsi" class="form-label">Deskripsi</label>
-            <textarea id="deskripsi" name="deskripsi" rows="5" required></textarea>
+            <textarea id="deskripsi" name="deskripsi" rows="5"></textarea>
           </div>
 
           <div class="mb-3">
@@ -140,17 +140,18 @@ export default async function tambahCampaignPage(app) {
         kategori: form.kategori.value,
         status: form.status.value,
         target: parseInt(form.target.value),
-        imageName: file.name,
         imageBase64: base64
       };
 
       try {
-        const res = await fetch('http://localhost:3000/api/campaigns', {
+        const res = await fetch(url + '/campaign/campaign-save', {
           method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
+          headers: { 
+                      'Content-Type': 'application/json',
+                      'Authorization': 'Bearer ' + localStorage.getItem('token')  
+                  },
           body: JSON.stringify(data)
         });
-
         if (res.ok) {
           alert('Campaign berhasil ditambahkan!');
           history.pushState(null, '', '/dashboard');
