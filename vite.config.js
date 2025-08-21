@@ -6,7 +6,7 @@ export default {
     strictPort: true,
     hmr: {
       protocol: 'ws',
-      host: '36.91.103.198',
+      host: ['donasikita.id', 'www.donasikita.id', '36.91.103.198'],
       port: 5173
     }
   }
