@@ -37,7 +37,16 @@ export default async function shareCampaignPage(app) {
   const campaign = respons.data;
   console.log(respons.data)
   const persentase = Math.round((campaign.collected_amount / campaign.target_amount) * 100);
-
+  const options = { 
+                    day: "numeric", 
+                    month: "long", 
+                    year: "numeric", 
+                    hour: "2-digit", 
+                    minute: "2-digit",
+                    timeZone: "Asia/Jakarta"
+                  };
+  const date = new Date(campaign.createdAt);
+  campaign.createdAt = date;
   setPageTitle(`${campaign.title}`);
   app.innerHTML = `
     ${renderHeader(false, true)} <!-- pakai button -->
@@ -58,7 +67,7 @@ export default async function shareCampaignPage(app) {
           <div class="row justify-content-center">
             <div class="col-md-8">
               <div class="mb-3">
-                <button type="button" id="btnKembali" class="btn btn-secondary">
+                <button type="button" onclick="btnKembali()" class="btn btn-secondary">
                   <i class="bi bi-arrow-left"></i> Kembali
                 </button>
               </div>
@@ -105,11 +114,16 @@ export default async function shareCampaignPage(app) {
 
               <!-- Cerita -->
               <div class="bg-white p-4 rounded shadow-sm mb-4">
-                <p class="text-muted mb-1">${campaign.createdAt}</p>
-                <h5 class="fw-semibold mb-3">Cerita Penggalangan Dana</h5>
-                <div class="description">
-                  ${campaign.description}</p>
-                </div>
+                <p class="text-muted mb-1">${
+                      campaign.createdAt.toLocaleString("id-ID", options) 
+                }</p>
+                <h5 class="fw-semibold mb-3">Proposal</h5>
+                <iframe 
+                    class="iframe-fullscreen"
+                    src="${campaign.url}" 
+                    title="Form Donasi"
+                    style="overflow-x:hidden;">
+                </iframe>
               </div>
 
               <!-- Tombol CTA -->
@@ -429,10 +443,9 @@ export default async function shareCampaignPage(app) {
     </style>
   `;
 
-  // Event listener untuk tombol kembali
-  document.getElementById('btnKembali').addEventListener('click', () => {
-    history.back(); // kembali ke halaman sebelumnya
-  });
+  window.btnKembali = function(){
+      return history.back();
+  }
 
   // Animate numbers counting up
   function animateNumber(element, start, end, duration) {
@@ -477,7 +490,7 @@ export default async function shareCampaignPage(app) {
   }, 1500);
 
   window.openShareModal = function (campaignId) {
-    const shareUrl = `${donation_url}share/${campaignId}/${localStorage.getItem("username")}`;
+    const shareUrl = `${donation_url}share/${campaignId}/${btoa(localStorage.getItem("username"))}`;
 
     // Set value input dan tombol share
     document.getElementById('shareLink').value = shareUrl;

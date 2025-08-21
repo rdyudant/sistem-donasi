@@ -9,6 +9,10 @@ import shareCampaignPage from './pages/shareCampaign.js';
 import colabolatorPage from './pages/colaborator.js';
 import followingCampaignPage from './pages/followingCampaign.js';
 import sharePage from './pages/share.js';
+import daftarCampaignPage from './pages/daftarCampaign.js';
+import daftarPermintaanPage from './pages/daftarPermintaan.js';
+import campaignKuPage from './pages/campaignku.js';
+import donasiFormPage from './pages/donasi.js';
 
 const routes = {
   '/': campaignPage,
@@ -18,16 +22,23 @@ const routes = {
   '/campaign/:id': detailCampaignPage,
   '/dashboard': dashboardPage,
   '/tambah-campaign': tambahCampaignPage,
+  '/list-campaign': daftarCampaignPage,
   '/edit-campaign/:id': editCampaignPage,
   '/share-campaign/:id': shareCampaignPage,
   '/collaborator/:id': colabolatorPage,
+  '/permintaan-bergabung/:id': daftarPermintaanPage,
   '/following-campaign': followingCampaignPage,
-  '/share/:id/:ref': sharePage
+  '/share/:id/:ref': sharePage,
+  '/donasi/:id/form/:ref': donasiFormPage,
+  '/campaignku': campaignKuPage,
 };
 
 function parseRoute(path) {
   if (path.startsWith('/share/')) {
     return '/share/:id/:ref';
+  }
+  if (path.startsWith('/donasi/')) {
+    return '/donasi/:id/form/:ref';
   }
   if (path.startsWith('/campaign/')) {
     return '/campaign/:id';
@@ -40,6 +51,9 @@ function parseRoute(path) {
   }
   if (path.startsWith('/collaborator/')) {
     return '/collaborator/:id';
+  }
+  if (path.startsWith('/permintaan-bergabung/')) {
+    return '/permintaan-bergabung/:id';
   }
   return path;
 }

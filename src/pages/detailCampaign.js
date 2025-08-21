@@ -1,31 +1,42 @@
 import renderHeader from '../components/header.js';
 import renderFooter from '../components/footer.js';
+import { url, url_images } from './conf/baseurl.js';
+import { checkLogin } from './conf/auth.js';
 
-export default function detailCampaignPage(app) {
+export default async function detailCampaignPage(app) {
   window.scrollTo(0, 0);
-  const campaignId = window.location.pathname.split('/').pop();
 
-  // Data dummy sementara (bisa nanti fetch berdasarkan ID)
-  const campaign = {
-    id: campaignId,
-    title: "Bantu Renovasi Sekolah",
-    available: "10000000",
-    collected: "18000000",
-    target: "50000000",
-    image: "https://picsum.photos/seed/sekolah/600/400",
-    totalDonatur: 85,
-    tanggal: "08 Juli 2025",
-    deskripsi: "Kami mengajak Anda untuk berpartisipasi dalam program renovasi sekolah di daerah pelosok. Bantuan Anda sangat berarti."
-  };
-  const persentase = Math.round((campaign.collected / campaign.target) * 100);
+  const url_ = window.location.href.split('/')
+  const donation_url = `${ url_[0] }//${ url_[2] }/`
+  const campaignId = atob(url_[4]);
+  const user = url_[5];
 
+  const res = await fetch(url + '/campaign/share-campaign/'+campaignId, {
+    method: 'GET',
+    headers: { 
+                'Content-Type': 'application/json'
+            }
+  });
+
+  const respons = await res.json();
+  const campaign = respons.data;
+  const persentase = Math.round((campaign.collected_amount / campaign.target_amount) * 100);
+  const options = { 
+                    day: "numeric", 
+                    month: "long", 
+                    year: "numeric", 
+                    hour: "2-digit", 
+                    minute: "2-digit",
+                    timeZone: "Asia/Jakarta"
+                  };
+  const date = new Date(campaign.createdAt);
+  campaign.createdAt = date;
   setPageTitle(`${campaign.title}`);
   app.innerHTML = `
-    ${renderHeader(true)} <!-- pakai button -->
     <main>
 
       <!-- Hero Section dengan Background Gambar -->
-      <section class="position-relative" style="height: 320px; background-image: url('${campaign.image}'); background-size: cover; background-position: center;">
+      <section class="position-relative" style="height: 320px; background-image: url('${ url_images }${campaign.image_thumb}'); background-size: cover; background-position: center;">
         <div class="position-absolute top-0 start-0 w-100 h-100 bg-dark bg-opacity-50"></div>
         <div class="container h-100 d-flex flex-column justify-content-center text-white position-relative">
           <h1 class="fw-bold">${campaign.title}</h1>
@@ -38,12 +49,6 @@ export default function detailCampaignPage(app) {
         <div class="container">
           <div class="row justify-content-center">
             <div class="col-md-8">
-              <div class="mb-3">
-                <button type="button" id="btnKembali" class="btn btn-secondary">
-                  <i class="bi bi-arrow-left"></i> Kembali
-                </button>
-              </div>
-
               <!-- Info Donasi -->
               <div class="bg-white p-4 rounded shadow-sm mb-4">
                 <div class="card-body">
@@ -52,12 +57,12 @@ export default function detailCampaignPage(app) {
                       <div class="stat-item stat-collected">
                           <i class="fas fa-coins stat-icon"></i>
                           <div class="stat-label">Donasi Terkumpul</div>
-                          <div class="stat-value" id="collected-amount">Rp${campaign.collected}</div>
+                          <div class="stat-value" id="collected-amount">Rp${campaign.collected_amount}</div>
                       </div>
                       <div class="stat-item stat-target">
                           <i class="fas fa-bullseye stat-icon"></i>
                           <div class="stat-label">Target Donasi</div>
-                          <div class="stat-value" id="target-amount">Rp${campaign.target}</div>
+                          <div class="stat-value" id="target-amount">Rp${campaign.target_amount}</div>
                       </div>
                   </div>
                   
@@ -72,23 +77,12 @@ export default function detailCampaignPage(app) {
                       </div>
                   </div>
                   
-                  <!-- Supporters count -->
+                  <!-- Supporters count 
                   <div class="supporters-count">
                       <span class="number" id="supporters-count">${campaign.totalDonatur}</span>
                       <span class="label">orang telah berdonasi</span>
-                  </div>
+                  </div> -->
                 </div>
-
-                <!-- <div class="d-flex justify-content-between align-items-center mb-3">
-                  <div>
-                    <i class="bi bi-heart-fill text-danger"></i> ${campaign.totalDonatur} Donasi
-                  </div>
-                  <div>
-                    <a href="#" class="text-decoration-none">
-                      <i class="bi bi-file-earmark-text"></i> Rincian penggunaan dana
-                    </a>
-                  </div>
-                </div> -->
 
                 <div class="alert alert-info mt-3 mb-0">
                   Semakin banyak donasi yang tersedia, semakin besar bantuan yang bisa disalurkan oleh gerakan ini.
@@ -97,16 +91,22 @@ export default function detailCampaignPage(app) {
 
               <!-- Cerita -->
               <div class="bg-white p-4 rounded shadow-sm mb-4">
-                <p class="text-muted mb-1">${campaign.tanggal}</p>
-                <h5 class="fw-semibold mb-3">Cerita Penggalangan Dana</h5>
-                <p>${campaign.deskripsi}</p>
+                <p class="text-muted mb-1">${
+                      campaign.createdAt.toLocaleString("id-ID", options) 
+                }</p>
+                <h5 class="fw-semibold mb-3">Proposal</h5>
+                <iframe 
+                    class="iframe-fullscreen"
+                    src="${campaign.url}" 
+                    title="Form Donasi"
+                    style="overflow-x:hidden;">
+                </iframe>
               </div>
 
               <!-- Tombol CTA -->
-              <!-- <div class="d-flex gap-2">
-                <a href="#" class="btn btn-outline-primary w-50"><i class="bi bi-share"></i> Bagikan</a>
-                <a href="/donasi/${campaign.id}/form" class="btn btn-danger w-50">Donasi Sekarang</a>
-              </div> -->
+              <div class="d-flex gap-2">
+                <button onclick="joinPencariDonatur()" class="btn btn-success w-100">Bergabung sebagai Pencari Donatur</button>
+              </div>
 
             </div>
           </div>
@@ -114,12 +114,53 @@ export default function detailCampaignPage(app) {
       </section>
 
     </main>
-    ${renderFooter()}
+
+    <!-- Modal Share Campaign -->
+    <div class="modal fade" id="modalShareCampaign" tabindex="-1" aria-labelledby="modalShareLabel" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content p-4">
+          <div class="modal-header border-0">
+            <h5 class="modal-title w-100 text-center fw-bold" id="modalShareLabel">Bagikan Campaign Ini</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+
+          <div class="modal-body text-center">
+
+            <button class="btn btn-success m-2" id="btnShareWa">
+              <i class="bi bi-whatsapp"></i> WhatsApp
+            </button>
+
+            <button class="btn btn-primary m-2" id="btnShareFb">
+              <i class="bi bi-facebook"></i> Facebook
+            </button>
+
+            <button class="btn btn-info text-white m-2" id="btnShareTw">
+              <i class="bi bi-twitter"></i> Twitter
+            </button>
+
+            <div class="mt-4 mb-3">
+              <div class="input-group" style="max-width: 500px; margin: 0 auto;">
+                <input type="text" class="form-control" id="shareLink" readonly>
+                <button class="btn btn-outline-secondary" id="btnSalin">Salin</button>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </div>
 
     <style>
       @keyframes gradientMove {
             0%, 100% { background-position: 0% 50%; }
             50% { background-position: 100% 50%; }
+        }
+
+        .description img {
+            max-width: 100%;
+            height: auto;
+            display: block;
+            margin: 10px auto;
         }
         
         .card-header {
@@ -375,11 +416,6 @@ export default function detailCampaignPage(app) {
     </style>
   `;
 
-  // Event listener untuk tombol kembali
-  document.getElementById('btnKembali').addEventListener('click', () => {
-    history.back(); // kembali ke halaman sebelumnya
-  });
-
   // Animate numbers counting up
   function animateNumber(element, start, end, duration) {
     const startTime = Date.now();
@@ -410,15 +446,58 @@ export default function detailCampaignPage(app) {
     
     updateNumber();
   }
-  
-    // Animate the numbers
-    animateNumber(document.getElementById('collected-amount'), 0, parseInt(campaign.collected), 3500);
-    animateNumber(document.getElementById('target-amount'), 0, parseInt(campaign.target), 4000);
-    animateNumber(document.getElementById('supporters-count'), 0, parseInt(campaign.totalDonatur), 3500);
-    animateNumber(document.getElementById('percentage'), 0, parseInt(persentase), 3500);
 
-    // Animate progress bar
-    setTimeout(() => {
-        document.getElementById('progress-fill').style.width = persentase + '%';
-    }, 1500);
+  function joinPencariDonatur() {
+    return window.location.href = '/login';
+ }
+ window.joinPencariDonatur = joinPencariDonatur;
+
+  // Animate the numbers
+  animateNumber(document.getElementById('collected-amount'), 0, parseInt(campaign.collected_amount), 3500);
+  animateNumber(document.getElementById('target-amount'), 0, parseInt(campaign.target_amount), 4000);
+  // animateNumber(document.getElementById('supporters-count'), 0, parseInt(campaign.totalDonatur), 3500);
+  animateNumber(document.getElementById('percentage'), 0, parseInt(persentase), 3500);
+
+  // Animate progress bar
+  setTimeout(() => {
+      document.getElementById('progress-fill').style.width = persentase + '%';
+  }, 1500);
+
+  window.openShareModal = function (campaignId) {
+    const shareUrl = window.location.href;
+    console.log('Share URL:', shareUrl);
+
+    // Set value input dan tombol share
+    document.getElementById('shareLink').value = shareUrl;
+
+    document.getElementById('btnShareWa').onclick = () => {
+      window.open(`https://wa.me/?text=${encodeURIComponent(shareUrl)}`, '_blank');
+    };
+
+    document.getElementById('btnShareFb').onclick = () => {
+      window.open(`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(shareUrl)}`, '_blank');
+    };
+
+    document.getElementById('btnShareTw').onclick = () => {
+      window.open(`https://twitter.com/intent/tweet?url=${encodeURIComponent(shareUrl)}`, '_blank');
+    };
+
+    document.getElementById('btnSalin').onclick = () => {
+      const input = document.getElementById('shareLink');
+      input.select();
+      document.execCommand('copy');
+
+      Swal.fire({
+        icon: 'success',
+        title: 'Link disalin!',
+        timer: 2000,
+        showConfirmButton: false
+      });
+    };
+
+    // Tampilkan modal
+    const modal = new bootstrap.Modal(document.getElementById('modalShareCampaign'));
+    modal.show();
+  }
+
 }

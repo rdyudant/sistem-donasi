@@ -9,7 +9,8 @@ export default async function sharePage(app) {
   const url_ = window.location.href.split('/')
   const donation_url = `${ url_[0] }//${ url_[2] }/`
   const campaignId = url_[4];
-  const user = url_[5];
+  const user = atob(url_[5]);
+  
   if(!url_[5]) return window.location.href = '/login';
 
   const res = await fetch(url + '/campaign/share-campaign/'+campaignId, {
@@ -22,7 +23,16 @@ export default async function sharePage(app) {
   const respons = await res.json();
   const campaign = respons.data;
   const persentase = Math.round((campaign.collected_amount / campaign.target_amount) * 100);
-
+  const options = { 
+                    day: "numeric", 
+                    month: "long", 
+                    year: "numeric", 
+                    hour: "2-digit", 
+                    minute: "2-digit",
+                    timeZone: "Asia/Jakarta"
+                  };
+  const date = new Date(campaign.createdAt);
+  campaign.createdAt = date;
   setPageTitle(`${campaign.title}`);
   app.innerHTML = `
     <main>
@@ -83,11 +93,16 @@ export default async function sharePage(app) {
 
               <!-- Cerita -->
               <div class="bg-white p-4 rounded shadow-sm mb-4">
-                <p class="text-muted mb-1">${campaign.createdAt}</p>
-                <h5 class="fw-semibold mb-3">Cerita Penggalangan Dana</h5>
-                <div class="description">
-                  ${campaign.description}
-                </div>
+                <p class="text-muted mb-1">${
+                      campaign.createdAt.toLocaleString("id-ID", options) 
+                }</p>
+                <h5 class="fw-semibold mb-3">Proposal</h5>
+                <iframe 
+                    class="iframe-fullscreen"
+                    src="${campaign.url}" 
+                    title="Form Donasi"
+                    style="overflow-x:hidden;">
+                </iframe>
               </div>
 
               <!-- Tombol CTA -->
@@ -95,7 +110,7 @@ export default async function sharePage(app) {
                 <a class="btn btn-outline-primary w-50" onclick="openShareModal(${campaign.id})">
                   <i class="bi bi-share"></i> Bagikan
                 </a>
-                <a href="/donasi/${campaign.id}/form" class="btn btn-danger w-50">Donasi Sekarang</a>
+                <a href="/donasi/${campaign.id}/form/${ btoa(user) }" class="btn btn-danger w-50">Donasi Sekarang</a>
               </div>
 
             </div>
@@ -104,7 +119,6 @@ export default async function sharePage(app) {
       </section>
 
     </main>
-    ${renderFooter()}
 
     <!-- Modal Share Campaign -->
     <div class="modal fade" id="modalShareCampaign" tabindex="-1" aria-labelledby="modalShareLabel" aria-hidden="true">
@@ -451,6 +465,7 @@ export default async function sharePage(app) {
 
   window.openShareModal = function (campaignId) {
     const shareUrl = window.location.href;
+    console.log('Share URL:', shareUrl);
 
     // Set value input dan tombol share
     document.getElementById('shareLink').value = shareUrl;

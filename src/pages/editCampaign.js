@@ -58,11 +58,6 @@ export default async function editCampaignPage(app) {
           </div>
 
           <div class="mb-3">
-            <label for="deskripsi" class="form-label">Deskripsi</label>
-            <textarea id="deskripsi" name="deskripsi" rows="4" required>${campaign.description}</textarea>
-          </div>
-
-          <div class="mb-3">
             <label for="kategori" class="form-label">Kategori</label>
             <select class="form-select" id="kategori" name="kategori" required>
               ${['Sosial', 'Pendidikan', 'Religi', 'Medis', 'Lainnya'].map(kat => `
@@ -83,6 +78,11 @@ export default async function editCampaignPage(app) {
           <div class="mb-3">
             <label for="target" class="form-label">Target Donasi (Rp)</label>
             <input type="number" class="form-control" id="target" name="target" min="1000" value="${campaign.target_amount}" required>
+          </div>
+
+          <div class="mb-3">
+            <label for="url" class="form-label">url Landing Page:</label>
+            <input type="text" class="form-control" id="url" name="url" value="${campaign.url}" required>
           </div>
 
           <div class="d-flex justify-content-between">
@@ -116,27 +116,6 @@ export default async function editCampaignPage(app) {
     window.dispatchEvent(new Event('popstate'));
   });
 
-  // Inisialisasi TinyMCE
-  tinymce.init({
-    selector: '#deskripsi',
-    height: 300,
-    menubar: false,
-    plugins: 'lists link image preview',
-    toolbar: 'undo redo | bold italic underline | bullist numlist | link image | preview',
-    branding: false,
-    image_dimensions: false,
-    image_caption: true,
-    image_class_list: [
-      { title: 'Responsif', value: 'img-fluid' }
-    ],
-    content_style: `
-      img {
-        max-width: 100%;
-        height: auto;
-      }
-    `
-  });
-
   // Submit form
   const form = document.getElementById('formEdit');
   form.addEventListener('submit', async (e) => {
@@ -162,10 +141,10 @@ export default async function editCampaignPage(app) {
       const updated = {
         id: campaign.id,
         title: form.judul.value,
-        description: tinymce.get('deskripsi').getContent(),
         category: form.kategori.value,
         goal: parseInt(form.target.value),
         status: form.status.value,
+        url: form.url.value,
         imageBase64: imageBase64
       };
 
@@ -184,16 +163,27 @@ export default async function editCampaignPage(app) {
         const response = await res.json()
 
         if (res.ok) {
-          alert('Campaign berhasil diperbarui!');
+          Swal.fire({
+            title: "Berhasil!",
+            text: "Campaign berhasil diperbarui.",
+            icon: "success"
+          });
           history.pushState(null, '', '/dashboard');
           window.dispatchEvent(new Event('popstate'));
         } else {
           const err = await res.json();
-          alert(err.message || 'Gagal update campaign');
+          Swal.fire({
+            title: "Galat!",
+            text: err.message || 'Gagal mengubah campaign',
+            icon: "error"
+          });
         }
       } catch (err) {
-        console.error(err);
-        alert('Koneksi ke server gagal.');
+        Swal.fire({
+          title: "Galat!",
+          text: "Campaign gagal diperbarui.",
+          icon: "error"
+        });
       }
     }
   });

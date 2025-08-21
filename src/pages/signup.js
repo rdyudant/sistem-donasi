@@ -41,6 +41,26 @@ export default function signupPage(app) {
                 </div>
 
                 <div class="mb-3">
+                  <label for="provinsi" class="form-label">Provinsi</label>
+                  <input class="form-control" id="provinsi" name="provinsi" required />
+                </div>
+
+                <div class="mb-3">
+                  <label for="kab" class="form-label">Kabupaten / Kota</label>
+                  <input class="form-control" id="kab" name="kab" required />
+                </div>
+
+                <div class="mb-3">
+                  <label for="kecamatan" class="form-label">Kecamatan</label>
+                  <input class="form-control" id="kecamatan" name="kecamatan" required />
+                </div>
+
+                <div class="mb-3">
+                  <label for="desa" class="form-label">Desa / Kelurahan</label>
+                  <input class="form-control" id="desa" name="desa" required />
+                </div>
+
+                <div class="mb-3">
                   <label for="alamat" class="form-label">Alamat</label>
                   <textarea class="form-control" id="alamat" name="alamat" rows="3" required></textarea>
                 </div>
@@ -97,6 +117,10 @@ export default function signupPage(app) {
       email: form.email.value,
       fullname: form.nama.value,
       alamat: form.alamat.value,
+      provinsi: form.provinsi.value,
+      kab: form.kab.value,
+      kecamatan: form.kecamatan.value,
+      desa: form.desa.value,
       nomor_hp: form.nohp.value
     };
 

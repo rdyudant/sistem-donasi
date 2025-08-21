@@ -16,26 +16,26 @@ export default async function followingCampaignPage(app) {
   const res = await fetch(url + '/campaign/daftar-follow-campaign', {
     method: 'GET',
     headers: { 
-                'Content-Type': 'application/json',
-                'Authorization': 'Bearer ' + localStorage.getItem('token')  
-            }
+      'Content-Type': 'application/json',
+      'Authorization': 'Bearer ' + localStorage.getItem('token')  
+    }
   });
 
   const respons = await res.json();
-  const list = respons.data
-  console.log(list)
+  const list = respons.data || [];
+  console.log(list);
 
   app.innerHTML = `
     ${renderHeader(false, true)}
     <main class="py-5 mt-5">
       <div class="container mt-2">
-        <h2 class="mb-4 text-center">Campaign yang ikuti</h2>
-        <button type="button" id="btnKembali" class="btn btn-secondary">
-          <i class="bi bi-arrow-left"></i> Kembali
-        </button>
-        <div class="p-2" />
+        <h5 class="mb-4">Campaign yang ikuti</h5>
+        <span><i class="bi bi-house-fill"></i> <a href="/dashboard">Dashboard</a> / <strong>Campaign yang ikuti</strong></span>
+        <hr>
+        <span class="text-muted mb-3">Berikut adalah daftar campaign yang Anda ikuti.</span>
+        <div class="p-2"></div>
         <div class="table-responsive">
-          <table class="table table-bordered table-hover align-middle">
+          <table id="followingCampaignTable" class="table table-bordered table-hover align-middle display nowrap" style="width:100%">
             <thead class="table-light">
               <tr>
                 <th>#</th>
@@ -76,35 +76,22 @@ export default async function followingCampaignPage(app) {
     </main>
   `;
 
-   // Event listener untuk tombol kembali
-  document.getElementById('btnKembali').addEventListener('click', () => {
-    history.back(); // kembali ke halaman sebelumnya
-  });
-
-  // Buka modal
-  window.openCollaboratorModal = function () {
-    const modal = new bootstrap.Modal(document.getElementById('collabModal'));
-    modal.show();
-  };
-  window.addCollab = function () {
-    const email = document.getElementById('collabEmail').value;
-    const campaignId = document.getElementById('campaignId').value;
-
-    if (!email) return;
-
-    // Validasi format email
-    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-      Swal.fire({
-        icon: 'error',
-        title: 'Email tidak valid',
-        timer: 2000,
-        showConfirmButton: false
-      });
-      return;
+  // Inisialisasi DataTable setelah render
+  setTimeout(() => {
+    if (window.followingCampaignTableInstance) {
+      window.followingCampaignTableInstance.destroy();
+      $('#followingCampaignTable').removeClass('dataTable');
     }
-
-    
-  }
+    window.followingCampaignTableInstance = $('#followingCampaignTable').DataTable({
+      scrollX: true,
+      paging: true,
+      pageLength: 10,
+      lengthChange: true,
+      info: true,
+      searching: true,
+      order: [[0, "asc"]]
+    });
+  }, 0);
 
   // Tambah event listener untuk tombol logout
   document.getElementById('btnLogout')?.addEventListener('click', logout);
