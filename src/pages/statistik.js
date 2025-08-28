@@ -3,7 +3,7 @@ import renderFooter from '../components/footer.js';
 import { url, url_images } from './conf/baseurl.js';
 import { checkLogin } from './conf/auth.js';
 
-export default async function shareCampaignPage(app) {
+export default async function statistikPage(app) {
   window.scrollTo(0, 0);
   const result = await checkLogin();
     if (result.status !== 200 || localStorage.getItem('token') == null) {

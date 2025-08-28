@@ -13,6 +13,7 @@ import daftarCampaignPage from './pages/daftarCampaign.js';
 import daftarPermintaanPage from './pages/daftarPermintaan.js';
 import campaignKuPage from './pages/campaignku.js';
 import donasiFormPage from './pages/donasi.js';
+import statistikPage from './pages/statistik.js';
 
 const routes = {
   '/': campaignPage,
@@ -31,6 +32,7 @@ const routes = {
   '/share/:id/:ref': sharePage,
   '/donasi/:id/form/:ref': donasiFormPage,
   '/campaignku': campaignKuPage,
+  '/statistik/:id': statistikPage
 };
 
 function parseRoute(path) {
@@ -54,6 +56,9 @@ function parseRoute(path) {
   }
   if (path.startsWith('/permintaan-bergabung/')) {
     return '/permintaan-bergabung/:id';
+  }
+  if (path.startsWith('/statistik/')) {
+    return '/statistik/:id';
   }
   return path;
 }
