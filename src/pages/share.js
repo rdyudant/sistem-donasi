@@ -510,15 +510,42 @@ export default async function sharePage(app) {
                   padding: 12px 0;
               }
           }
+          .btn-fixed-container {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            display: flex;
+            gap: 8px;
+            padding: 10px;
+            background: #fff; /* supaya tombol tidak nempel ke konten */
+            box-shadow: 0 -2px 8px rgba(0,0,0,0.1);
+            z-index: 100;
+          }
+
+          .btn-fixed-container .btn {
+            font-size: 1rem;
+            font-weight: 600;
+            padding: 12px 0;
+          }
       </style>
       <iframe 
           class="iframe-fullscreen"
           src="${campaign.url}" 
           style="overflow-x:hidden;">
       </iframe>
-      <a href="/donasi/${campaign.id}/form/${ btoa(user) }" target="_blank" class="btn-donasi-fixed">
-          Donasi Sekarang
-      </a>
+      <!-- Tombol Donasi & Bagikan -->
+      <div class="btn-fixed-container">
+        <a href="${donation_url}donasi/${campaign.id}/form/${ btoa(user) }" 
+          class="btn btn-danger flex-fill">
+          <i class="bi bi-heart-fill"></i> Donasi Sekarang
+        </a>
+        <a class="btn btn-success flex-fill" 
+          style="background: #09943cff;"
+          href="${donation_url}signup">
+          <i class="bi bi-box-arrow-in-left"></i> Jadi Relawan
+        </a>
+      </div>
     `;
   }
   

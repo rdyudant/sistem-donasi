@@ -22,6 +22,16 @@ export default async function donasiFormPage(app) {
   const campaign = respons.data;
 
   setPageTitle(`${campaign.title}`);
+
+  const getChannels = await fetch(url + '/share/list-channels', {
+    method: 'GET',
+    headers: { 
+                'Content-Type': 'application/json'
+            }
+  });
+  const channels = await getChannels.json();
+  console.log(channels);
+  const channelList = channels.payment_channel;
   app.innerHTML = `
     <main>
       <!-- Hero -->
@@ -71,24 +81,14 @@ export default async function donasiFormPage(app) {
                 <p>Silakan pilih metode pembayaran yang Anda inginkan:</p>
                 
                 <div class="form-check mb-2">
-                  <input class="form-check-input" type="radio" name="metodePembayaran" id="transfer" value="transfer">
-                  <label class="form-check-label" for="transfer">Transfer Bank</label>
+                  <select class="form-select" id="channelSelect">
+                    <option value="" selected disabled>Pilih Metode Pembayaran</option>
+                    ${channelList.map(channel => `
+                      <option value="${channel.pg_code}">${channel.pg_name}</option>
+                    `).join('')}
+                  </select>
                 </div>
-                <div class="form-check mb-2">
-                  <input class="form-check-input" type="radio" name="metodePembayaran" id="ewallet" value="ewallet">
-                  <label class="form-check-label" for="ewallet">E-Wallet (OVO, DANA, GoPay)</label>
-                </div>
-                <div class="form-check mb-2">
-                  <input class="form-check-input" type="radio" name="metodePembayaran" id="va" value="va">
-                  <label class="form-check-label" for="va">Virtual Account</label>
-                </div>
-                <div class="form-check mb-3">
-                  <input class="form-check-input" type="radio" name="metodePembayaran" id="qris" value="qris">
-                  <label class="form-check-label" for="qris">QRIS</label>
-                </div>
-
                 <button class="btn btn-primary" id="btnInstruksi" type="button">Tampilkan Instruksi</button>
-                <div id="instruksiPembayaran" class="mt-3"></div>
               </div>
               <!-- Tombol CTA -->
               <div class="d-flex gap-2">
@@ -100,57 +100,4 @@ export default async function donasiFormPage(app) {
       </section>
     </main>
   `;
-
-  // Event tombol instruksi
-  document.getElementById("btnInstruksi").addEventListener("click", () => {
-    const selected = document.querySelector('input[name="metodePembayaran"]:checked');
-    const instruksiEl = document.getElementById("instruksiPembayaran");
-    let instruksiHtml = "";
-
-    if (!selected) {
-      instruksiEl.innerHTML = "<div class='alert alert-warning'>Silakan pilih metode pembayaran terlebih dahulu.</div>";
-      return;
-    }
-
-    switch (selected.value) {
-      case "transfer":
-        instruksiHtml = `
-          <p>Silakan transfer ke rekening berikut:</p>
-          <ul>
-            <li><b>Bank BCA</b>: 123456789 a.n Yayasan Peduli</li>
-            <li><b>Bank Mandiri</b>: 987654321 a.n Yayasan Peduli</li>
-          </ul>
-        `;
-        break;
-      case "ewallet":
-        instruksiHtml = `
-          <p>Gunakan salah satu E-Wallet berikut:</p>
-          <ul>
-            <li>OVO: 0812-3456-7890 a.n Yayasan Peduli</li>
-            <li>Dana: 0812-3456-7890 a.n Yayasan Peduli</li>
-            <li>GoPay: 0812-3456-7890 a.n Yayasan Peduli</li>
-          </ul>
-        `;
-        break;
-      case "va":
-        instruksiHtml = `
-          <p>Nomor Virtual Account Anda:</p>
-          <div class="alert alert-primary text-center fs-5">8808 1234 5678 9012</div>
-          <p>VA ini berlaku 24 jam.</p>
-        `;
-        break;
-      case "qris":
-        instruksiHtml = `
-          <p>Scan QRIS berikut untuk membayar:</p>
-          <div class="text-center">
-            <img src="/images/qris-example.png" alt="QRIS" class="img-fluid" style="max-width:250px;">
-          </div>
-        `;
-        break;
-      default:
-        instruksiHtml = "<p>Pilih metode pembayaran yang valid.</p>";
-    }
-
-    instruksiEl.innerHTML = instruksiHtml;
-  });
 }
