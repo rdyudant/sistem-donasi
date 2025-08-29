@@ -14,6 +14,7 @@ import daftarPermintaanPage from './pages/daftarPermintaan.js';
 import campaignKuPage from './pages/campaignku.js';
 import donasiFormPage from './pages/donasi.js';
 import statistikPage from './pages/statistik.js';
+import paymentPage from './pages/paymentPage.js';
 
 const routes = {
   '/': campaignPage,
@@ -32,7 +33,9 @@ const routes = {
   '/share/:id/:ref': sharePage,
   '/donasi/:id/form/:ref': donasiFormPage,
   '/campaignku': campaignKuPage,
-  '/statistik/:id': statistikPage
+  '/statistik/:id': statistikPage,
+  '/payment': paymentPage
+
 };
 
 function parseRoute(path) {

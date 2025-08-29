@@ -23,15 +23,6 @@ export default async function donasiFormPage(app) {
 
   setPageTitle(`${campaign.title}`);
 
-  const getChannels = await fetch(url + '/share/list-channels', {
-    method: 'GET',
-    headers: { 
-                'Content-Type': 'application/json'
-            }
-  });
-  const channels = await getChannels.json();
-  console.log(channels);
-  const channelList = channels.payment_channel;
   app.innerHTML = `
     <main>
       <!-- Hero -->
@@ -70,29 +61,20 @@ export default async function donasiFormPage(app) {
                   </div>
                   <div class="mb-3">
                     <label class="form-label">Reff</label>
-                    <input type="tel" class="form-control" id="hpDonatur" readonly value="${ user }" required>
+                    <input type="tel" class="form-control" id="reff" readonly value="${ user }" required>
                   </div>
                 </form>
               </div>
 
               <!-- Instruksi Pembayaran -->
               <div class="bg-white p-4 rounded shadow-sm mb-4">
-                <h5 class="fw-semibold mb-3">Instruksi Pembayaran</h5>
-                <p>Silakan pilih metode pembayaran yang Anda inginkan:</p>
-                
-                <div class="form-check mb-2">
-                  <select class="form-select" id="channelSelect">
-                    <option value="" selected disabled>Pilih Metode Pembayaran</option>
-                    ${channelList.map(channel => `
-                      <option value="${channel.pg_code}">${channel.pg_name}</option>
-                    `).join('')}
-                  </select>
-                </div>
-                <button class="btn btn-primary" id="btnInstruksi" type="button">Tampilkan Instruksi</button>
+                <h5 class="fw-semibold mb-3">Nominal Donasi</h5>
+                <label for="channelSelect" class="form-label">Jumlah Nominal :</label>
+                <input type="text" class="form-control mb-3" placeholder="0" id="nominalDonasi">
               </div>
               <!-- Tombol CTA -->
               <div class="d-flex gap-2">
-                <button type="submit" class="btn btn-success w-100">Donasi</button>
+                <button type="button" onclick="generatePayment()" class="btn btn-success w-100">Donasi</button>
               </div>
             </div>
           </div>
@@ -100,4 +82,92 @@ export default async function donasiFormPage(app) {
       </section>
     </main>
   `;
+
+  window.generatePayment = async function() {
+    const namaDonatur = document.getElementById('namaDonatur').value;
+    const emailDonatur = document.getElementById('emailDonatur').value;
+    const hpDonatur = document.getElementById('hpDonatur').value;
+    const pesanDonatur = document.getElementById('pesanDonatur').value;
+    const nominalDonasi = document.getElementById('nominalDonasi').value;
+    const reff = document.getElementById('reff').value;
+    if(!namaDonatur || !emailDonatur || !hpDonatur || !nominalDonasi) {
+      alert('Lengkapi data donatur terlebih dahulu.');
+      return;
+    }
+    const no_bill = `DONASI${Date.now()}-${reff}`;
+    const bill_total = nominalDonasi;
+    const cust_name = namaDonatur;
+    const cust_email = emailDonatur;
+    const cust_hp = hpDonatur;
+    const cust_no = `CUST${Date.now()}`;
+
+    const createTransaction = await fetch(url + '/share/create-transaction', {
+      method: 'post', 
+      body: JSON.stringify({
+        bill_no: no_bill,
+        bill_total: bill_total,
+        cust_name: cust_name,
+        cust_email: cust_email,
+        cust_hp: cust_hp,
+        cust_no: cust_no
+      }),
+      headers: { 
+                  'Content-Type': 'application/json'
+              }
+    })
+    const transaction = await createTransaction.json();
+    if(transaction.response_code == "00") {
+      Swal.fire({
+          icon: 'success',
+          title: 'Transaksi berhasil dibuat. Silakan lanjutkan ke metode pembayaran.',
+          showConfirmButton: false
+        })
+      window.location.href = transaction.redirect_url;
+    } else {
+      Swal.fire({
+        icon: 'error',
+        title: 'Transaksi berhasil dibuat. Silakan lanjutkan ke metode pembayaran.',
+        showConfirmButton: false
+      })
+    }
+  }
+
+  window.getPayment = async function() {
+    const channel_code = document.getElementById('channelSelect').value;
+    const namaDonatur = document.getElementById('namaDonatur').value;
+    const emailDonatur = document.getElementById('emailDonatur').value;
+    const hpDonatur = document.getElementById('hpDonatur').value;
+    const pesanDonatur = document.getElementById('pesanDonatur').value;
+    const nominalDonasi = document.getElementById('nominalDonasi').value;
+    const reff = document.getElementById('reff').value;
+
+    if (!channel_code) {
+      alert('Pilih metode pembayaran terlebih dahulu.');
+      return;
+    }
+
+    if(!namaDonatur || !emailDonatur || !hpDonatur || !nominalDonasi) {
+      alert('Lengkapi data donatur terlebih dahulu.');
+      return;
+    }
+
+    const getPayment = await fetch(url + '/share/pay-method', {
+      method: 'post',
+      body: JSON.stringify({
+        nama: namaDonatur,
+        email: emailDonatur,
+        hp: hpDonatur,
+        ref: reff,
+        amount: nominalDonasi,
+        channel_code: channel_code,
+        order_id: `DONASI${Date.now()}`,
+        product_description: `Donasi untuk ${campaign.title}`
+      }),
+      headers: { 
+                  'Content-Type': 'application/json'
+              }
+    })
+    const payment = await getPayment.json();
+    console.log(payment);
+  };
 }
