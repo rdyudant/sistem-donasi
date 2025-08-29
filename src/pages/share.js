@@ -542,7 +542,7 @@ export default async function sharePage(app) {
         </a>
         <a class="btn btn-success flex-fill" 
           style="background: #09943cff;"
-          href="${donation_url}signup">
+          href="${donation_url}bergabung?id_campaign=${campaign.id}" >
           <i class="bi bi-box-arrow-in-left"></i> Jadi Relawan
         </a>
       </div>

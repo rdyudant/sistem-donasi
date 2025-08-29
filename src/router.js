@@ -15,11 +15,13 @@ import campaignKuPage from './pages/campaignku.js';
 import donasiFormPage from './pages/donasi.js';
 import statistikPage from './pages/statistik.js';
 import paymentPage from './pages/paymentPage.js';
+import bergabungPage from './pages/bergabungPage.js';
 
 const routes = {
   '/': campaignPage,
   '/home': campaignPage,
   '/signup': signupPage,
+  '/bergabung': bergabungPage,
   '/login': loginPage,
   '/campaign/:id': detailCampaignPage,
   '/dashboard': dashboardPage,
