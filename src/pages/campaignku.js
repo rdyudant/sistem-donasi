@@ -87,9 +87,6 @@ export default async function campaignKuPage(app) {
                       <a class="btn btn-sm btn-dark" href="/collaborator/${c.id}">
                         <i class="bi bi-person"></i> Collaborator
                       </a>
-                      <a href="/permintaan-bergabung/${c.id}" class="btn btn-light">
-                        <i class="bi bi-person-plus"></i> Permintaan Campaign
-                      </a>
                     </div>
                   </td>
                 </tr>

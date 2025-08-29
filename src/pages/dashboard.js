@@ -1,6 +1,6 @@
 import renderHeader from '../components/header.js';
 import renderFooter from '../components/footer.js';
-import { url } from './conf/baseurl.js';
+import { url, formatRupiah } from './conf/baseurl.js';
 import { checkLogin } from './conf/auth.js';
 
 export default async function dashboardPage(app) {
@@ -13,7 +13,19 @@ export default async function dashboardPage(app) {
     return;
   }
 
-  const res = await fetch(url + '/campaign/daftar-campaign', {
+  const user = await fetch(url + '/auth/get-user', {
+    method: 'GET',
+    headers: { 
+                'Content-Type': 'application/json',
+                'Authorization': 'Bearer ' + localStorage.getItem('token')  
+            }
+  });
+
+  const getRes = await user.json();
+  const userData = getRes.data;
+  console.log();
+
+  const res = await fetch(url + `/campaign/campaign-active/${ userData.id }`, {
     method: 'GET',
     headers: { 
                 'Content-Type': 'application/json',
@@ -22,22 +34,9 @@ export default async function dashboardPage(app) {
   });
 
   const respons = await res.json();
-  const campaigns = respons.data
-  console.log(campaigns)
+  const campaigns = respons.data;
 
-  function getStatusBadgeClass(status) {
-    switch (status) {
-      case 'active':
-        return 'success';
-      case 'closed':
-        return 'danger';
-      case 'cancelled':
-        return 'danger';
-      case 'draft':
-      default:
-        return 'secondary';
-    }
-  }
+  
 
   app.innerHTML = `
     <style>
@@ -76,47 +75,31 @@ export default async function dashboardPage(app) {
 
         <!-- Stats Cards -->
         <div class="row mb-4">
-          <div class="col-md-3 mb-3">
-            <div class="card border-0 shadow-sm stats-card h-100">
-              <div class="card-body text-center">
-                <div class="text-primary mb-2">
-                  <i class="bi bi-bar-chart fs-1"></i>
-                </div>
-                <h4 class="fw-bold text-success">152</h4>
-                <p class="text-muted mb-0">Total Campaign</p>
+          <div class="col-12">
+            <div class="card border-0 shadow-sm">
+              <div class="card-header bg-white border-0">
+                <h5 class="fw-bold mb-0">
+                  <i class="bi bi-graph-up text-success me-2"></i>
+                  Campaign Yang Sedang Berjalan
+                </h5>
               </div>
-            </div>
-          </div>
-          <div class="col-md-3 mb-3">
-            <div class="card border-0 shadow-sm stats-card h-100">
-              <div class="card-body text-center">
-                <div class="text-info mb-2">
-                  <i class="bi bi-people fs-1"></i>
+              <div class="card-body">
+                <div class="row">
+                  ${ campaigns.length > 0 ? campaigns.map(campaign => `
+                      <div class="col-md-4 mb-3">
+                        <div class="border rounded p-3">
+                          <h6 class="fw-bold">${ campaign.title }</h6>
+                          <div class="progress mb-2" style="height: 8px;">
+                            <div class="progress-bar bg-success" style="width: ${ campaign.persentase }%"></div>
+                          </div>
+                          <div class="d-flex justify-content-between">
+                            <small class="text-muted">${ campaign.persentase }% tercapai</small>
+                            <small class="fw-bold text-success">Rp ${ formatRupiah(campaign.collected_amount) } / ${ formatRupiah(campaign.target_amount) }</small>
+                          </div>
+                        </div>
+                      </div>
+                    `).join('') : '<p class="text-center">Tidak ada campaign yang sedang berjalan.</p>' }
                 </div>
-                <h4 class="fw-bold text-success">1,247</h4>
-                <p class="text-muted mb-0">Total Donatur</p>
-              </div>
-            </div>
-          </div>
-          <div class="col-md-3 mb-3">
-            <div class="card border-0 shadow-sm stats-card h-100">
-              <div class="card-body text-center">
-                <div class="text-warning mb-2">
-                  <i class="bi bi-currency-dollar fs-1"></i>
-                </div>
-                <h4 class="fw-bold text-success">Rp 45.2M</h4>
-                <p class="text-muted mb-0">Total Donasi</p>
-              </div>
-            </div>
-          </div>
-          <div class="col-md-3 mb-3">
-            <div class="card border-0 shadow-sm stats-card h-100">
-              <div class="card-body text-center">
-                <div class="text-success mb-2">
-                  <i class="bi bi-check-circle fs-1"></i>
-                </div>
-                <h4 class="fw-bold text-success">98</h4>
-                <p class="text-muted mb-0">Campaign Aktif</p>
               </div>
             </div>
           </div>
@@ -177,60 +160,14 @@ export default async function dashboardPage(app) {
         <div class="row mb-4">
           <!-- Recent Activity -->
           <div class="col-md-8 mb-4">
-            <div class="card border-0 shadow-sm h-100">
-              <div class="card-header bg-white border-0">
-                <h5 class="fw-bold mb-0">
-                  <i class="bi bi-clock-history text-primary me-2"></i>
+              <div class="card shadow border-0 mt-4">
+                <div class="card-header bg-light fw-bold">
                   Aktivitas Terbaru
-                </h5>
-              </div>
-              <div class="card-body">
-                <div class="activity-card border-bottom py-3">
-                  <div class="d-flex align-items-center">
-                    <div class="bg-success bg-opacity-10 rounded-circle p-2 me-3">
-                      <i class="bi bi-plus-circle text-success"></i>
-                    </div>
-                    <div class="flex-grow-1">
-                      <p class="mb-1">Campaign baru "Bantu Pendidikan Anak Yatim" telah dibuat</p>
-                      <small class="text-muted">2 jam yang lalu</small>
-                    </div>
-                  </div>
                 </div>
-                <div class="activity-card border-bottom py-3">
-                  <div class="d-flex align-items-center">
-                    <div class="bg-info bg-opacity-10 rounded-circle p-2 me-3">
-                      <i class="bi bi-heart-fill text-info"></i>
-                    </div>
-                    <div class="flex-grow-1">
-                      <p class="mb-1">Donasi baru sebesar Rp 500.000 diterima</p>
-                      <small class="text-muted">5 jam yang lalu</small>
-                    </div>
-                  </div>
-                </div>
-                <div class="activity-card border-bottom py-3">
-                  <div class="d-flex align-items-center">
-                    <div class="bg-warning bg-opacity-10 rounded-circle p-2 me-3">
-                      <i class="bi bi-star-fill text-warning"></i>
-                    </div>
-                    <div class="flex-grow-1">
-                      <p class="mb-1">Campaign "Bantuan Korban Bencana" mencapai 75% target</p>
-                      <small class="text-muted">1 hari yang lalu</small>
-                    </div>
-                  </div>
-                </div>
-                <div class="activity-card py-3">
-                  <div class="d-flex align-items-center">
-                    <div class="bg-primary bg-opacity-10 rounded-circle p-2 me-3">
-                      <i class="bi bi-check-circle text-primary"></i>
-                    </div>
-                    <div class="flex-grow-1">
-                      <p class="mb-1">Campaign "Masjid Al-Ikhlas" telah selesai dan mencapai target</p>
-                      <small class="text-muted">2 hari yang lalu</small>
-                    </div>
-                  </div>
+                <div class="card-body" id="recent-activity">
+                  <p class="text-muted">Memuat aktivitas...</p>
                 </div>
               </div>
-            </div>
           </div>
 
           <!-- Quick Actions -->
@@ -252,68 +189,6 @@ export default async function dashboardPage(app) {
                     <i class="bi bi-people me-2"></i>
                     Lihat Data Donatur
                   </button>
-                  <button class="btn btn-outline-info" onclick="location.href='/laporan'">
-                    <i class="bi bi-file-earmark-text me-2"></i>
-                    Unduh Laporan
-                  </button>
-                  <button class="btn btn-outline-warning" onclick="location.href='/pengaturan'">
-                    <i class="bi bi-gear me-2"></i>
-                    Pengaturan
-                  </button>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <!-- Campaign Progress -->
-        <div class="row mb-4">
-          <div class="col-12">
-            <div class="card border-0 shadow-sm">
-              <div class="card-header bg-white border-0">
-                <h5 class="fw-bold mb-0">
-                  <i class="bi bi-graph-up text-success me-2"></i>
-                  Campaign Populer
-                </h5>
-              </div>
-              <div class="card-body">
-                <div class="row">
-                  <div class="col-md-4 mb-3">
-                    <div class="border rounded p-3">
-                      <h6 class="fw-bold">Bantu Pendidikan Anak Yatim</h6>
-                      <div class="progress mb-2" style="height: 8px;">
-                        <div class="progress-bar bg-success" style="width: 85%"></div>
-                      </div>
-                      <div class="d-flex justify-content-between">
-                        <small class="text-muted">85% tercapai</small>
-                        <small class="fw-bold text-success">Rp 8.5M / 10M</small>
-                      </div>
-                    </div>
-                  </div>
-                  <div class="col-md-4 mb-3">
-                    <div class="border rounded p-3">
-                      <h6 class="fw-bold">Bantuan Korban Bencana Alam</h6>
-                      <div class="progress mb-2" style="height: 8px;">
-                        <div class="progress-bar bg-warning" style="width: 65%"></div>
-                      </div>
-                      <div class="d-flex justify-content-between">
-                        <small class="text-muted">65% tercapai</small>
-                        <small class="fw-bold text-warning">Rp 6.5M / 10M</small>
-                      </div>
-                    </div>
-                  </div>
-                  <div class="col-md-4 mb-3">
-                    <div class="border rounded p-3">
-                      <h6 class="fw-bold">Renovasi Masjid Al-Ikhlas</h6>
-                      <div class="progress mb-2" style="height: 8px;">
-                        <div class="progress-bar bg-info" style="width: 45%"></div>
-                      </div>
-                      <div class="d-flex justify-content-between">
-                        <small class="text-muted">45% tercapai</small>
-                        <small class="fw-bold text-info">Rp 4.5M / 10M</small>
-                      </div>
-                    </div>
-                  </div>
                 </div>
               </div>
             </div>
@@ -322,7 +197,49 @@ export default async function dashboardPage(app) {
       </div>
     </main>
   `;
+  // load pertama kali
+  await loadRecentActivity();
+
+  // auto refresh setiap 5 detik
+  setInterval(loadRecentActivity, 5000);
   document.getElementById('btnLogout')?.addEventListener('click', logout);
+}
+
+async function loadRecentActivity() {
+  try {
+    const res = await fetch(url + '/campaign/activity', {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer ' + localStorage.getItem('token')
+      }
+    });
+    const data = await res.json();
+
+    const container = document.getElementById('recent-activity');
+    if (!container) return;
+
+    if (!data.data || data.data.length === 0) {
+      container.innerHTML = '<p class="text-muted">Belum ada aktivitas.</p>';
+      return;
+    }
+
+    container.innerHTML = data.data.map(act => `
+      <div class="activity-card border-bottom py-3">
+        <div class="d-flex align-items-center">
+          <div class="bg-success bg-opacity-10 rounded-circle p-2 me-3">
+            <i class="bi bi-bell text-success"></i>
+          </div>
+          <div class="flex-grow-1">
+            <p class="mb-1">Sdr/i <b>${act.cust_name}</b> telah berdonasi untuk <b><i>${act.title}</i></b> sebesar <i>${ formatRupiah(act.bill_total) }</i></p>
+            <small class="text-muted">${ new Date(act.createdAt).toISOString().slice(0, 19).replace("T", " ")}</small>
+          </div>
+        </div>
+      </div>
+    `).join('');
+  } catch (err) {
+    console.error("Gagal ambil recent activity:", err);
+  }
 }
 
 function logout() {

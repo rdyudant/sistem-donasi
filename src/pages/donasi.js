@@ -94,7 +94,7 @@ export default async function donasiFormPage(app) {
       alert('Lengkapi data donatur terlebih dahulu.');
       return;
     }
-    const no_bill = `DONASI${Date.now()}-${reff}`;
+    const no_bill = `DONASI${Date.now()}-${reff}-${campaignId}`;
     const bill_total = nominalDonasi;
     const cust_name = namaDonatur;
     const cust_email = emailDonatur;

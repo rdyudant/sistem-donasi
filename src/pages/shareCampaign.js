@@ -67,9 +67,9 @@ export default async function shareCampaignPage(app) {
           <div class="row justify-content-center">
             <div class="col-md-8">
               <div class="mb-3">
-                <button type="button" onclick="btnKembali()" class="btn btn-secondary">
+                <a type="button" href="/dashboard" class="btn btn-secondary">
                   <i class="bi bi-arrow-left"></i> Kembali
-                </button>
+                </a>
               </div>
 
               <!-- Info Donasi -->
@@ -128,10 +128,10 @@ export default async function shareCampaignPage(app) {
 
               <!-- Tombol CTA -->
               <div class="d-flex gap-2">
-                <a class="btn btn-outline-primary w-50" onclick="openShareModal(${campaign.id})">
+                <a class="btn btn-outline-primary w-100" onclick="openShareModal(${campaign.id})">
                   <i class="bi bi-share"></i> Bagikan
                 </a>
-                <a href="/donasi/${campaign.id}/form" class="btn btn-danger w-50">Donasi Sekarang</a>
+                <!-- <a href="/donasi/${campaign.id}/form" class="btn btn-danger w-50">Donasi Sekarang</a> -->
               </div>
 
             </div>
