@@ -78,7 +78,7 @@ export default async function detailsCampaignPage(app) {
               <label class="form-label">Jumlah Donasi</label>
               <input type="number" class="form-control" id="manualJumlah" placeholder="Masukkan jumlah">
             </div>
-            <button type="submit" class="btn btn-primary">
+            <button type="button" onclick="saveFunc()" class="btn btn-primary">
               <i class="bi bi-plus-circle"></i> Tambah Donasi
             </button>
           </form>
@@ -97,6 +97,37 @@ export default async function detailsCampaignPage(app) {
 
   // Reload tabel transaksi setiap 10 detik
   setInterval(loadData, 10000);
+  
+  window.saveFunc = async function() {
+      const nama = document.getElementById("manualNama").value.trim();
+      const jumlah = parseInt(document.getElementById("manualJumlah").value);
+      if (!nama || !jumlah || jumlah <= 0) {
+        alert("Isi nama dan jumlah donasi dengan benar!");
+        return;
+      }
+      try {
+        const res = await fetch(`${url}/campaigns/${id_campaign}/manual-donation`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "Authorization": "Bearer " + localStorage.getItem("token")
+          },
+          body: JSON.stringify({ nama_donatur: nama, jumlah_donasi: jumlah })
+        });
+        const data = await res.json();
+        if (res.ok) {
+          alert("Donasi manual berhasil ditambahkan!");
+          document.getElementById("formDonasiManual").reset();
+          loadData(); // reload tabel dan chart
+        } else {
+          alert("Gagal menambahkan donasi: " + data.message);
+        }
+    }
+      catch (err) {
+        console.error("Error tambah donasi manual:", err);
+        alert("Terjadi kesalahan server.");
+      }
+}
 
   async function loadData() {
     try {
