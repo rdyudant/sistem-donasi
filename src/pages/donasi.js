@@ -109,7 +109,8 @@ export default async function donasiFormPage(app) {
         cust_name: cust_name,
         cust_email: cust_email,
         cust_hp: cust_hp,
-        cust_no: cust_no
+        cust_no: cust_no,
+        pesan: pesanDonatur
       }),
       headers: { 
                   'Content-Type': 'application/json'
