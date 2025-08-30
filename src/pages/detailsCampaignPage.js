@@ -106,13 +106,13 @@ export default async function detailsCampaignPage(app) {
         return;
       }
       try {
-        const res = await fetch(`${url}/campaigns/${id_campaign}/manual-donation`, {
+        const res = await fetch(`${url}/campaigns/manual-donation`, {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
             "Authorization": "Bearer " + localStorage.getItem("token")
           },
-          body: JSON.stringify({ nama_donatur: nama, jumlah_donasi: jumlah })
+          body: JSON.stringify({ nama_donatur: nama, jumlah_donasi: jumlah, id_campaign: id_campaign })
         });
         const data = await res.json();
         if (res.ok) {
