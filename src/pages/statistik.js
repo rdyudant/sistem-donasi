@@ -21,11 +21,33 @@ export default async function statistikPage(app) {
     }
 
   const campaignId = window.location.pathname.split('/').pop();
-  const url_ = window.location.href.split('/')
-  const donation_url = `${ url_[0] }//${ url_[2] }/`
-  // Data dummy sementara (bisa nanti fetch berdasarkan ID)
+  const params = new URLSearchParams(window.location.search);
+  const id_user = params.get("id");
+  const id_campaign = params.get("id_campaign");
 
-  const res = await fetch(url + '/campaign/daftar-campaign/'+campaignId, {
+  const getUname = await fetch(url + `/auth/get-user-id/${ id_user }`, {
+    method: 'GET',
+    headers: { 
+                'Content-Type': 'application/json',
+                'Authorization': 'Bearer ' + localStorage.getItem('token')  
+            }
+  });
+  const resUname = await getUname.json();
+  const uname = resUname.data.username || 'User';
+
+  const getDonatur = await fetch(url + '/campaign/daftar-donatur/', {
+    method: 'POST',
+    headers: { 
+                'Content-Type': 'application/json',
+                'Authorization': 'Bearer ' + localStorage.getItem('token')  
+            },
+    body: JSON.stringify({ reff: uname, id_campaign: id_campaign }),
+  });
+  
+  const resDonatur = await getDonatur.json();
+  const donaturs = resDonatur.data || [];
+
+  const res = await fetch(url + '/campaign/daftar-campaign/'+id_campaign, {
     method: 'GET',
     headers: { 
                 'Content-Type': 'application/json',
@@ -35,33 +57,13 @@ export default async function statistikPage(app) {
 
   const respons = await res.json();
   const campaign = respons.data;
-  console.log(respons.data)
-  const persentase = Math.round((campaign.collected_amount / campaign.target_amount) * 100);
-  const options = { 
-                    day: "numeric", 
-                    month: "long", 
-                    year: "numeric", 
-                    hour: "2-digit", 
-                    minute: "2-digit",
-                    timeZone: "Asia/Jakarta"
-                  };
+
   const date = new Date(campaign.createdAt);
   campaign.createdAt = date;
   setPageTitle(`${campaign.title}`);
 
-  const donationData = [
-    { id: 1, name: "Ahmad Rahmat", date: "2024-08-25", address: "Jakarta Selatan", message: "Semoga berkah dan bermanfaat", amount: 500000 },
-    { id: 2, name: "Siti Nurhaliza", date: "2024-08-24", address: "Bandung", message: "Untuk kebaikan bersama", amount: 250000 },
-    { id: 3, name: "Budi Santoso", date: "2024-08-23", address: "Surabaya", message: "Barakallahu fiikum", amount: 1000000 },
-    { id: 4, name: "Dewi Kusuma", date: "2024-08-22", address: "Yogyakarta", message: "Semoga membantu yang membutuhkan", amount: 750000 },
-    { id: 5, name: "Rizki Pratama", date: "2024-08-21", address: "Medan", message: "Berbagi kebahagiaan", amount: 300000 },
-    { id: 6, name: "Maya Sari", date: "2024-08-20", address: "Denpasar", message: "Untuk pendidikan anak yatim", amount: 2000000 },
-    { id: 7, name: "Andi Wijaya", date: "2024-08-19", address: "Makassar", message: "Semoga bermanfaat", amount: 150000 },
-    { id: 8, name: "Lina Marlina", date: "2024-08-18", address: "Palembang", message: "Berbagi rezeki", amount: 400000 },
-    { id: 9, name: "Hendra Gunawan", date: "2024-08-17", address: "Balikpapan", message: "Untuk kemanusiaan", amount: 600000 },
-    { id: 10, name: "Kartini Sari", date: "2024-08-16", address: "Semarang", message: "Mudah-mudahan berkah", amount: 350000 },
-  ];
-
+  const donationData = donaturs || [];
+  console.log(donationData);
   let currentPage = 1;
   let itemsPerPage = 10;
   let filteredData = [...donationData];
@@ -72,19 +74,18 @@ export default async function statistikPage(app) {
       <!-- Konten Detail -->
       <section class="py-5 mt-5">
         <div class="container">
+          <button type="button" id="btnKembali" class="btn btn-secondary btn-sm mb-3">
+            <i class="bi bi-arrow-left"></i> Kembali
+          </button>
           <div class="row justify-content-center">
             <div class="row mb-4">
                 <div class="col-md-8">
-                    <h4 class="mb-1">Donatur (738)</h4>
-                    <div class="text-muted">
-                        <i class="far fa-calendar-alt me-2"></i>
-                        31 Jan 2022 - 1 Mar 2022
-                    </div>
+                    <h4 class="mb-1">Daftar Donatur (${ resUname.data.fullname })</h4>
                 </div>
                 <div class="col-md-4 text-md-end">
-                    <button class="btn btn-primary">
+                    <!-- <button class="btn btn-primary">
                         Download Donatur
-                    </button>
+                    </button> -->
                 </div>
             </div>
 
@@ -113,7 +114,7 @@ export default async function statistikPage(app) {
                                     <i class="fas fa-users fa-2x"></i>
                                 </div>
                                 <div>
-                                    <small class="text-muted d-block">Jumlah Donasi</small>
+                                    <small class="text-muted d-block">Jumlah Donatur</small>
                                     <h5 class="mb-0" id="totalDonors">520</h5>
                                 </div>
                             </div>
@@ -130,7 +131,6 @@ export default async function statistikPage(app) {
                             <tr>
                                 <th scope="col">NAMA</th>
                                 <th scope="col">TANGGAL</th>
-                                <th scope="col">ALAMAT</th>
                                 <th scope="col">PESAN</th>
                                 <th scope="col">NOMINAL</th>
                             </tr>
@@ -153,12 +153,11 @@ export default async function statistikPage(app) {
       </section>
 
     </main>
-    ${renderFooter()}
   `;
 
-  window.btnKembali = function(){
-      return history.back();
-  }
+  document.getElementById('btnKembali').addEventListener('click', () => {
+    history.back(); // kembali ke halaman sebelumnya
+  });
 
   // Langsung render setelah HTML selesai di-render
   renderTable();
@@ -185,7 +184,7 @@ export default async function statistikPage(app) {
 
   // Update statistik
   function updateStats() {
-    const totalDonation = donationData.reduce((sum, item) => sum + item.amount, 0);
+    const totalDonation = donationData.reduce((sum, item) => sum + item.bill_total, 0);
     const totalDonors = donationData.length;
     const netDonation = donationData.reduce((sum, item) => sum + item.net, 0);
 
@@ -204,12 +203,11 @@ export default async function statistikPage(app) {
     tbody.innerHTML = pageData.map((item, index) => `
       <tr>
         <td>
-          <div class="fw-medium">${item.name}</div>
+          <div class="fw-medium">${item.cust_name}</div>
         </td>
-        <td>${formatDate(item.date)}</td>
-        <td>${formatRupiah(item.address)}</td>
-        <td>${formatRupiah(item.message)}</td>
-        <td>${formatRupiah(item.amount)}</td>
+        <td>${formatDate(item.createdAt)}</td>
+        <td>${item.pesan}</td>
+        <td>${formatRupiah(item.bill_total)}</td>
       </tr>
     `).join('');
 

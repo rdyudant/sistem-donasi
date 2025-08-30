@@ -35,7 +35,7 @@ const routes = {
   '/share/:id/:ref': sharePage,
   '/donasi/:id/form/:ref': donasiFormPage,
   '/campaignku': campaignKuPage,
-  '/statistik/:id': statistikPage,
+  '/statistik': statistikPage,
   '/payment': paymentPage
 
 };
@@ -61,9 +61,6 @@ function parseRoute(path) {
   }
   if (path.startsWith('/permintaan-bergabung/')) {
     return '/permintaan-bergabung/:id';
-  }
-  if (path.startsWith('/statistik/')) {
-    return '/statistik/:id';
   }
   return path;
 }

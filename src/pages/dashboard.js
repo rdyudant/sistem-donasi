@@ -94,7 +94,7 @@ export default async function dashboardPage(app) {
                           </div>
                           <div class="d-flex justify-content-between">
                             <small class="text-muted">${ campaign.persentase }% tercapai</small>
-                            <small class="fw-bold text-success">Rp ${ formatRupiah(campaign.collected_amount) } / ${ formatRupiah(campaign.target_amount) }</small>
+                            <small class="fw-bold text-success">${ formatRupiah(campaign.total_donasi) } / ${ formatRupiah(campaign.target_amount) }</small>
                           </div>
                         </div>
                       </div>

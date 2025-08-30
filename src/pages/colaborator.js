@@ -66,7 +66,7 @@ export default async function colabolatorPage(app) {
                   <td>${c.fullname}</td>
                   <td>
                     <div class="d-flex flex-wrap gap-1">
-                      <a class="btn btn-sm btn-warning" href="/statistik/${c.id}">
+                      <a class="btn btn-sm btn-warning" href="/statistik?id=${c.id}&id_campaign=${campaignId}">
                         <i class="bi bi-graph-up-arrow"></i> Statistik
                       </a>
                       <a class="btn btn-sm btn-danger" href="/collaborator/${c.id}">
