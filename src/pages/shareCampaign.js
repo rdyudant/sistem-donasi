@@ -19,8 +19,8 @@ export default async function shareCampaignPage(app) {
       }, 1000);
       return;
     }
-
-  const campaignId = window.location.pathname.split('/').pop();
+  const params = new URLSearchParams(window.location.search);
+  const campaignId = params.get("id_campaign");
   const url_ = window.location.href.split('/')
   const donation_url = `${ url_[0] }//${ url_[2] }/`
   // Data dummy sementara (bisa nanti fetch berdasarkan ID)
@@ -34,9 +34,10 @@ export default async function shareCampaignPage(app) {
   });
 
   const respons = await res.json();
-  const campaign = respons.data;
+  const campaign = respons.data[0];
   console.log(respons.data)
-  const persentase = Math.round((campaign.collected_amount / campaign.target_amount) * 100);
+  const persentase = Math.round((campaign.total_donasi / campaign.target_amount) * 100);
+  console.log(persentase)
   const options = { 
                     day: "numeric", 
                     month: "long", 
@@ -67,7 +68,7 @@ export default async function shareCampaignPage(app) {
           <div class="row justify-content-center">
             <div class="col-md-8">
               <div class="mb-3">
-                <a type="button" href="/dashboard" class="btn btn-secondary">
+                <a type="button" href="/dashboard" class="btn btn-secondary btn-sm">
                   <i class="bi bi-arrow-left"></i> Kembali
                 </a>
               </div>
@@ -80,7 +81,7 @@ export default async function shareCampaignPage(app) {
                       <div class="stat-item stat-collected">
                           <i class="fas fa-coins stat-icon"></i>
                           <div class="stat-label">Donasi Terkumpul</div>
-                          <div class="stat-value" id="collected-amount">Rp${campaign.collected_amount}</div>
+                          <div class="stat-value" id="collected-amount">Rp${campaign.total_donasi}</div>
                       </div>
                       <div class="stat-item stat-target">
                           <i class="fas fa-bullseye stat-icon"></i>
@@ -479,7 +480,7 @@ export default async function shareCampaignPage(app) {
   }
 
   // Animate the numbers
-  animateNumber(document.getElementById('collected-amount'), 0, parseInt(campaign.collected_amount), 3500);
+  animateNumber(document.getElementById('collected-amount'), 0, parseInt(campaign.total_donasi), 3500);
   animateNumber(document.getElementById('target-amount'), 0, parseInt(campaign.target_amount), 4000);
   // animateNumber(document.getElementById('supporters-count'), 0, parseInt(campaign.totalDonatur), 3500);
   animateNumber(document.getElementById('percentage'), 0, parseInt(persentase), 3500);

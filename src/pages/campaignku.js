@@ -23,7 +23,7 @@ export default async function campaignKuPage(app) {
 
   const respons = await res.json();
   const campaigns = respons.data || [];
-
+  console.log(campaigns);
   function getStatusBadgeClass(status) {
     switch (status) {
       case 'active':
@@ -71,7 +71,7 @@ export default async function campaignKuPage(app) {
                 <tr>
                   <td>${i + 1}</td>
                   <td>${c.title}</td>
-                  <td>${formatRupiah(c.collected_amount)}</td>
+                  <td>${formatRupiah(c.total_donasi)}</td>
                   <td>${formatRupiah(c.target_amount)}</td>
                   <td>
                     <span class="badge bg-${getStatusBadgeClass(c.status)}">${c.status}</span>
@@ -81,12 +81,16 @@ export default async function campaignKuPage(app) {
                       <a class="btn btn-sm btn-primary" href="/edit-campaign/${c.id}">
                         <i class="bi bi-pencil"></i> Edit
                       </a>
-                      <a class="btn btn-sm btn-warning" href="/share-campaign/${c.id}">
+                      <a class="btn btn-sm btn-dark" href="/detail-campaign?id_campaign=${c.id}">
+                        <i class="bi bi-person"></i> Detail
+                      </a>
+                      <a class="btn btn-sm btn-warning" href="/share-campaign?id_campaign=${c.id}">
                         <i class="bi bi-share"></i> Share
                       </a>
-                      <a class="btn btn-sm btn-dark" href="/collaborator/${c.id}">
+                      <a class="btn btn-sm btn-danger" href="/collaborator/${c.id}">
                         <i class="bi bi-person"></i> Collaborator
                       </a>
+                      
                     </div>
                   </td>
                 </tr>

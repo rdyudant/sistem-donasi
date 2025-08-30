@@ -16,6 +16,7 @@ import donasiFormPage from './pages/donasi.js';
 import statistikPage from './pages/statistik.js';
 import paymentPage from './pages/paymentPage.js';
 import bergabungPage from './pages/bergabungPage.js';
+import detailsCampaignPage from './pages/detailsCampaignPage.js';
 
 const routes = {
   '/': campaignPage,
@@ -28,7 +29,7 @@ const routes = {
   '/tambah-campaign': tambahCampaignPage,
   '/list-campaign': daftarCampaignPage,
   '/edit-campaign/:id': editCampaignPage,
-  '/share-campaign/:id': shareCampaignPage,
+  '/share-campaign': shareCampaignPage,
   '/collaborator/:id': colabolatorPage,
   '/permintaan-bergabung/:id': daftarPermintaanPage,
   '/following-campaign': followingCampaignPage,
@@ -36,8 +37,8 @@ const routes = {
   '/donasi/:id/form/:ref': donasiFormPage,
   '/campaignku': campaignKuPage,
   '/statistik': statistikPage,
-  '/payment': paymentPage
-
+  '/payment': paymentPage,
+  '/detail-campaign': detailsCampaignPage,
 };
 
 function parseRoute(path) {
@@ -52,9 +53,6 @@ function parseRoute(path) {
   }
   if (path.startsWith('/edit-campaign/')) {
     return '/edit-campaign/:id';
-  }
-  if (path.startsWith('/share-campaign/')) {
-    return '/share-campaign/:id';
   }
   if (path.startsWith('/collaborator/')) {
     return '/collaborator/:id';

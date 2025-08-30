@@ -1,5 +1,5 @@
 import renderHeader from '../components/header.js';
-import { url } from './conf/baseurl.js';
+import { url, formatRupiah } from './conf/baseurl.js';
 import { checkLogin } from './conf/auth.js';
 
 export default async function followingCampaignPage(app) {
@@ -23,6 +23,7 @@ export default async function followingCampaignPage(app) {
 
   const respons = await res.json();
   const list = respons.data || [];
+  const id_user = respons.id_user || null;
   console.log(list);
 
   app.innerHTML = `
@@ -51,20 +52,20 @@ export default async function followingCampaignPage(app) {
                 <tr>
                   <td>${i + 1}</td>
                   <td>${c.title}</td>
-                  <td>${c.collected_amount}</td>
-                  <td>${c.target_amount}</td>
+                  <td>${formatRupiah(c.total_donasi)}</td>
+                  <td>${formatRupiah(c.target_amount)}</td>
                   <td>${c.status}</td>
                   <td>
                     <div class="d-flex flex-wrap gap-1">
-                      <a target="#blank" class="btn btn-sm btn-success" href="/share-campaign/${c.id}">
+                      <a target="#blank" class="btn btn-sm btn-success" href="/share-campaign?id_campaign=${c.id}">
                         <i class="bi bi-share-fill"></i> Bagikan
                       </a>
-                      <a class="btn btn-sm btn-warning" href="/statistik-campaign/${c.id}">
+                      <a class="btn btn-sm btn-warning" href="/statistik?id=${ id_user }&id_campaign=${c.id}">
                         <i class="bi bi-graph-up-arrow"></i> Statistik
                       </a>
-                      <a class="btn btn-sm btn-danger" href="#">
+                      <!-- <a class="btn btn-sm btn-danger" href="#">
                         <i class="bi bi-trash"></i> keluar dari campaign
-                      </a>
+                      </a>-->
                     </div>
                   </td>
                 </tr>
