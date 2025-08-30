@@ -16,27 +16,24 @@ export default async function dashboardPage(app) {
   const user = await fetch(url + '/auth/get-user', {
     method: 'GET',
     headers: { 
-                'Content-Type': 'application/json',
-                'Authorization': 'Bearer ' + localStorage.getItem('token')  
-            }
+      'Content-Type': 'application/json',
+      'Authorization': 'Bearer ' + localStorage.getItem('token')  
+    }
   });
 
   const getRes = await user.json();
   const userData = getRes.data;
-  console.log();
 
   const res = await fetch(url + `/campaign/campaign-active/${ userData.id }`, {
     method: 'GET',
     headers: { 
-                'Content-Type': 'application/json',
-                'Authorization': 'Bearer ' + localStorage.getItem('token')  
-            }
+      'Content-Type': 'application/json',
+      'Authorization': 'Bearer ' + localStorage.getItem('token')  
+    }
   });
 
   const respons = await res.json();
   const campaigns = respons.data;
-
-  
 
   app.innerHTML = `
     <style>
@@ -205,6 +202,11 @@ export default async function dashboardPage(app) {
   document.getElementById('btnLogout')?.addEventListener('click', logout);
 }
 
+/* ---------------- PAGINATION ---------------- */
+let activityData = [];
+let currentPage = 1;
+const itemsPerPage = 5;
+
 async function loadRecentActivity() {
   try {
     const res = await fetch(url + '/campaign/activity', {
@@ -215,32 +217,79 @@ async function loadRecentActivity() {
       }
     });
     const data = await res.json();
-
-    const container = document.getElementById('recent-activity');
-    if (!container) return;
-
-    if (!data.data || data.data.length === 0) {
-      container.innerHTML = '<p class="text-muted">Belum ada aktivitas.</p>';
-      return;
-    }
-
-    container.innerHTML = data.data.map(act => `
-      <div class="activity-card border-bottom py-3">
-        <div class="d-flex align-items-center">
-          <div class="bg-success bg-opacity-10 rounded-circle p-2 me-3">
-            <i class="bi bi-bell text-success"></i>
-          </div>
-          <div class="flex-grow-1">
-            <p class="mb-1">Sdr/i <b>${act.cust_name}</b> telah berdonasi untuk <b><i>${act.title}</i></b> sebesar <i>${ formatRupiah(act.bill_total) }</i></p>
-            <small class="text-muted">${ new Date(act.createdAt).toISOString().slice(0, 19).replace("T", " ")}</small>
-          </div>
-        </div>
-      </div>
-    `).join('');
+    activityData = data.data || [];
+    renderActivity();
   } catch (err) {
     console.error("Gagal ambil recent activity:", err);
   }
 }
+
+function renderActivity() {
+  const container = document.getElementById('recent-activity');
+  if (!container) return;
+
+  if (activityData.length === 0) {
+    container.innerHTML = '<p class="text-muted">Belum ada aktivitas.</p>';
+    return;
+  }
+
+  const startIndex = (currentPage - 1) * itemsPerPage;
+  const endIndex = startIndex + itemsPerPage;
+  const paginatedData = activityData.slice(startIndex, endIndex);
+
+  const activityHTML = paginatedData.map(act => `
+    <div class="activity-card border-bottom py-3">
+      <div class="d-flex align-items-center">
+        <div class="bg-success bg-opacity-10 rounded-circle p-2 me-3">
+          <i class="bi bi-bell text-success"></i>
+        </div>
+        <div class="flex-grow-1">
+          <p class="mb-1">
+            Sdr/i <b>${act.cust_name}</b> telah berdonasi untuk
+            <b><i>${act.title}</i></b> sebesar <i>${formatRupiah(act.bill_total)}</i>
+          </p>
+          <small class="text-muted">
+            ${new Date(act.createdAt).toISOString().slice(0, 19).replace("T", " ")}
+          </small>
+        </div>
+      </div>
+    </div>
+  `).join('');
+
+  const totalPages = Math.ceil(activityData.length / itemsPerPage);
+  let paginationHTML = `
+    <nav aria-label="Page navigation" class="mt-3">
+      <ul class="pagination justify-content-center">
+        <li class="page-item ${currentPage === 1 ? 'disabled' : ''}">
+          <a class="page-link" href="#" onclick="changePage(${currentPage - 1})">Prev</a>
+        </li>
+  `;
+
+  for (let i = 1; i <= totalPages; i++) {
+    paginationHTML += `
+      <li class="page-item ${currentPage === i ? 'active' : ''}">
+        <a class="page-link" href="#" onclick="changePage(${i})">${i}</a>
+      </li>
+    `;
+  }
+
+  paginationHTML += `
+        <li class="page-item ${currentPage === totalPages ? 'disabled' : ''}">
+          <a class="page-link" href="#" onclick="changePage(${currentPage + 1})">Next</a>
+        </li>
+      </ul>
+    </nav>
+  `;
+
+  container.innerHTML = activityHTML + paginationHTML;
+}
+
+window.changePage = function (page) {
+  const totalPages = Math.ceil(activityData.length / itemsPerPage);
+  if (page < 1 || page > totalPages) return;
+  currentPage = page;
+  renderActivity();
+};
 
 function logout() {
   localStorage.clear()

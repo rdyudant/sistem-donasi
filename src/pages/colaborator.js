@@ -37,14 +37,14 @@ export default async function colabolatorPage(app) {
         <div class="mb-3">
           <div class="row">
             <div class="col-sm-6">
-              <form id="formCollaborator">
+              <!-- <form id="formCollaborator">
                 <input type="hidden" id="campaignId" value="${ campaignId }"/>
                 <div class="mb-3">
                   <label for="collabEmail" class="form-label">Masukkan Email Collaborator</label>
                   <input type="email" class="form-control" id="collabEmail" required>
                 </div>
                 <button type="submit" class="btn btn-primary">Tambah</button>
-              </form>
+              </form> -->
             </div>
           </div>
         </div>
